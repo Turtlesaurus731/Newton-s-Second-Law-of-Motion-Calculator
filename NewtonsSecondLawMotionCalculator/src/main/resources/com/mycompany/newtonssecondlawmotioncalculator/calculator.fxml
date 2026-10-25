@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<HBox fx:id="root" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" spacing="10.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1">
+<HBox fx:id="root" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" spacing="10.0" stylesheets="@../../../dark-theme.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <StackPane alignment="CENTER_RIGHT" nodeOrientation="RIGHT_TO_LEFT" style="-fx-background-color: #ffffff;">
          <children>
@@ -20,19 +20,28 @@
       </StackPane>
       <VBox alignment="CENTER" spacing="10.0">
          <children>
-            <Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Force Vectors" />
-            <ListView fx:id="forceVectorListView" />
+            <Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Force Vectors">
+               <VBox.margin>
+                  <Insets left="20.0" />
+               </VBox.margin></Label>
+            <ListView fx:id="forceVectorListView">
+               <VBox.margin>
+                  <Insets left="20.0" />
+               </VBox.margin></ListView>
          </children>
       </VBox>
       <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="250.0" spacing="10.0">
          <children>
             <Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="18.0" text="Add Force Vector" />
-            <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" spacing="10.0">
+            <HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" spacing="10.0">
                <children>
                   <TextField prefHeight="26.0" prefWidth="90.0" promptText="X" fx:id="xForceVectorTextField" />
                   <TextField fx:id="yForceVectorTextField" prefHeight="26.0" prefWidth="90.0" promptText="Y" />
                   <Label prefHeight="18.0" text="N" />
                </children>
+               <VBox.margin>
+                  <Insets left="20.0" />
+               </VBox.margin>
             </HBox>
             <Button fx:id="addButton" mnemonicParsing="false" onAction="#onActionAddButton" prefHeight="25.0" prefWidth="130.0" text="Add" />
             <Button fx:id="removeButton" mnemonicParsing="false" onAction="#onActionRemoveButton" prefHeight="25.0" prefWidth="130.0" text="Remove" />
@@ -50,13 +59,23 @@
                   <Insets top="50.0" />
                </VBox.margin>
             </HBox>
-            <CheckBox fx:id="netAccelerationCheckBox" mnemonicParsing="false" onAction="#onActionNetAccelerationCheckBox" text="Show Net Acceleration" />
-            <CheckBox fx:id="darkModeToggleCheckBox" mnemonicParsing="false" onAction="#onActionDarkModeToggleCheckBox" text="Dark Mode Toggle" />
+            <VBox alignment="BASELINE_LEFT" prefHeight="200.0" prefWidth="100.0" spacing="10.0">
+               <children>
+                  <CheckBox fx:id="netAccelerationCheckBox" mnemonicParsing="false" onAction="#onActionNetAccelerationCheckBox" text="Show Net Acceleration" />
+                  <CheckBox fx:id="darkModeToggleCheckBox" mnemonicParsing="false" onAction="#onActionDarkModeToggleCheckBox" text="Dark Mode Toggle" />
+               </children>
+               <padding>
+                  <Insets top="20.0" />
+               </padding>
+               <VBox.margin>
+                  <Insets left="20.0" />
+               </VBox.margin>
+            </VBox>
          </children>
       </VBox>
-      <VBox alignment="TOP_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+      <VBox alignment="TOP_RIGHT" fillWidth="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="NEVER">
          <children>
-            <Button fx:id="infoButton" alignment="CENTER" maxHeight="29.0" maxWidth="29.0" mnemonicParsing="false" onAction="#onActionInfoButton" prefHeight="29.0" prefWidth="29.0" style="-fx-background-radius: 999; -fx-background-color: lightblue; -fx-font-weight: bold; -fx-font-style: italic;" text="i" />
+            <Button fx:id="infoButton" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onAction="#onActionInfoButton" prefHeight="30.0" prefWidth="30.0" style="-fx-background-radius: 999; -fx-background-color: lightblue; -fx-font-weight: bold; -fx-font-style: italic; -fx-text-fill: black; -fx-background-insets: 0; -fx-border-color: transparent;" text="i" />
          </children>
       </VBox>
    </children>
