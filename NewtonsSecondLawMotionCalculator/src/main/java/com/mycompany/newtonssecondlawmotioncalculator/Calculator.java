@@ -31,7 +31,34 @@ public class Calculator {
      * @param forceVectors The force vectors that will be rendered in canvas
      * @return The Newton-Pixel ratio that fits all the force vectors in the canvas
      */
-    public static double calculateNewtonToPixelRatio(Vector2d forceVectors) {
-        return 0;
+    public static double calculateNewtonToPixelRatio(Vector2d[] forceVectors) {
+        if (forceVectors.length <= 0) {
+            System.out.println("No force vectors provided to calculate ratio");
+            return -1;
+        }
+
+        final double CANVAS_SIZE_X = 500, CANVAS_SIZE_Y = 500;
+        final double CANVAS_CENTER = CANVAS_SIZE_X / 2;
+        final double PIXEL_LENGTH_BASE = 300;
+
+        Vector2d maximumForceVector = forceVectors[0];
+
+        for (Vector2d forceVector : forceVectors) {
+            if (forceVector.length() > maximumForceVector.length()) {
+                maximumForceVector = forceVector;
+            }
+        }
+
+        return PIXEL_LENGTH_BASE / maximumForceVector.length();
+    }
+
+    /**
+     * Converts a force vector's coordinates from Newtons to Pixels
+     * @param newtonToPixelRatio The Newton-Pixel ratio
+     * @param forceVector The force vector to convert
+     * @return The force vector with its coordinates converted to pixels
+     */
+    public static Vector2d convertToPixelLength(double newtonToPixelRatio, Vector2d forceVector) {
+        return forceVector.mul(newtonToPixelRatio);
     }
 }
