@@ -14,6 +14,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import javafx.event.ActionEvent;
 
 /**
  * FXML Controller class
@@ -45,12 +46,46 @@ public class CalculatorController implements Initializable {
     @FXML
     private Button infoButton;
 
+    //Temporary before enzo fix on his end
+    @FXML
+    private CheckBox darkModeToggleCheckBox;
+
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-    }    
+    }
+
+    @FXML
+    private void onActionAddButton(ActionEvent actionEvent) {
+        // TODO
+    }
+
+    @FXML
+    private void onActionRemoveButton(ActionEvent actionEvent) {
+        // TODO
+    }
+
+    @FXML
+    private void onActionResetButton(ActionEvent actionEvent) {
+        // TODO
+    }
+
+    @FXML
+    private void onActionNetAccelerationCheckBox(ActionEvent actionEvent) {
+        // TODO
+    }
+
+    @FXML
+    private void onActionDarkModeToggleCheckBox(ActionEvent actionEvent) {
+        // TODO
+    }
+
+    @FXML
+    public void onActionInfoButton(ActionEvent actionEvent) {
+        // TODO
+    }
     
 }
