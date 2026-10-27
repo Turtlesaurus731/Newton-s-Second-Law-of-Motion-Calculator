@@ -1,0 +1,54 @@
+.root {
+    -fx-base: #11141c;
+    -fx-background-color: #121829;
+    -fx-control-inner-background: #202530;
+    -fx-text-fill: #bcbec4;
+}
+/*.root {
+    -fx-base: #121829;
+    -fx-background-color: #121829;
+    -fx-control-inner-background: #202530;
+    -fx-text-fill: #bcbec4;
+}*/
+
+.label {
+    -fx-text-fill: #bcbec4;
+}
+
+.text-field {
+    -fx-background-color: #2b2d30;
+    -fx-text-fill: #ffffff;
+    -fx-prompt-text-fill: #6f737a;
+    -fx-border-color: #383b40;
+    -fx-border-radius: 4px;
+    -fx-background-radius: 4px;
+}
+
+.button {
+    -fx-background-color: #393b40;
+    -fx-text-fill: #ffffff;
+    -fx-border-color: #4e5157;
+    -fx-border-radius: 4px;
+    -fx-background-radius: 4px;
+    -fx-cursor: hand;
+}
+
+.check-box {
+    -fx-text-fill: #bcbec4;
+}
+
+.check-box .box {
+    -fx-background-color: #2b2d30;
+    -fx-border-color: #383b40;
+    -fx-border-radius: 3px;
+}
+
+.list-view {
+    -fx-background-color: #202530;
+    -fx-control-inner-background: #2b2d30;
+    -fx-border-color: #383b40;
+}
+
+.infoButton {
+    -fx-text-fill: #ffffff;
+}

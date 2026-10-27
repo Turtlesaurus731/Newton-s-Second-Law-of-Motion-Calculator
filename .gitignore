@@ -28,3 +28,8 @@ replay_pid*
 /dist/
 /nbproject/private/
 /nbproject/workspace-impl.xml
+
+# IntelliJ IDEA & Build Outputs
+.idea/
+*.iml
+target/
