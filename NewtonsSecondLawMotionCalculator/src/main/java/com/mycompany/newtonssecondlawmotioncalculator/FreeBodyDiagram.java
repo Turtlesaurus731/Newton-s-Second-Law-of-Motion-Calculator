@@ -34,8 +34,10 @@ public class FreeBodyDiagram {
         }
 
         // Draw the acceleration vector at a static amount of pixel length
-        Vector2d normalizedAccelerationVector = netAccelerationVector.normalize();
-        drawVector(netAccelerationVector.mul(ACCELERATION_PIXEL_LENGTH), Color.GRAY);
+        if (calculatorController.getNetAccelerationCheckBox().isSelected()) {
+            Vector2d normalizedAccelerationVector = netAccelerationVector.normalize();
+            drawVector(netAccelerationVector.mul(ACCELERATION_PIXEL_LENGTH), Color.GRAY);
+        }
     }
 
     /**
