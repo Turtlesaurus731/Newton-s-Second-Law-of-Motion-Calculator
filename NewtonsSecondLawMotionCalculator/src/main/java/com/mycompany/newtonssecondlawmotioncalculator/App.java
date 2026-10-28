@@ -14,8 +14,8 @@ import java.io.IOException;
  */
 public class App extends Application {
 
-    @Getter
-    private static Scene scene;
+    @Getter private static Scene scene;
+    @Getter private static CalculatorController calculatorController;
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -31,6 +31,7 @@ public class App extends Application {
 
     private static Parent loadFXML(String fxml) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml + ".fxml"));
+        calculatorController = fxmlLoader.getController();
         return fxmlLoader.load();
     }
 
