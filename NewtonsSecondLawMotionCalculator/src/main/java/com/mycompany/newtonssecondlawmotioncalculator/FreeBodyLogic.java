@@ -8,6 +8,7 @@ public class FreeBodyLogic {
     @Getter private static Vector2d netForceVector;
     @Getter private static Vector2d netAccelerationVector;
     @Getter private static double mass;
+    @Getter private static double newtonPixelRatio;
 
     /**
      * Sets the force vectors and updates net force vector & net acceleration vector where possible
@@ -16,8 +17,9 @@ public class FreeBodyLogic {
     public static void setForceVectors(Vector2d... forceVectorsToCalculate) {
         forceVectors = forceVectorsToCalculate;
 
-        // Update net force vector & acceleration accordingly
+        // Update net force vector, acceleration & newton pixel ratio accordingly
         netForceVector = Calculator.calculateNetForceVector(forceVectors);
+        newtonPixelRatio = Calculator.calculateNewtonToPixelRatio(forceVectors);
 
         if (mass > 0) {
             netAccelerationVector = Calculator.calculateNetAccelerationVector(netForceVector, mass);
