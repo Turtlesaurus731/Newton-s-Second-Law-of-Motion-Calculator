@@ -1,7 +1,6 @@
 package com.mycompany.newtonssecondlawmotioncalculator;
 
 import org.joml.Vector2d;
-
 import java.util.Arrays;
 
 public class Calculator {
@@ -38,9 +37,13 @@ public class Calculator {
             return -1;
         }
 
-        final double CANVAS_SIZE_X = 500, CANVAS_SIZE_Y = 500;
+        CalculatorController calculatorController = App.getCalculatorController();
+
+        final double CANVAS_SIZE_X = calculatorController.getOutput().getWidth();
+        final double CANVAS_SIZE_Y = calculatorController.getOutput().getHeight();
         final double CANVAS_CENTER = CANVAS_SIZE_X / 2;
-        final double PIXEL_LENGTH_BASE = 300;
+        final double VECTOR_COVERAGE = 80; // How much of the canvas the maximum vector covers in %
+        final double PIXEL_LENGTH_BASE = CANVAS_SIZE_X * (VECTOR_COVERAGE / 100);
 
         Vector2d maximumForceVector = forceVectors[0];
 
