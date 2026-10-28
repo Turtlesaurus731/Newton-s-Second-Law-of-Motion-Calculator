@@ -10,16 +10,17 @@ public class FreeBodyDiagram {
 
     private static CalculatorController calculatorController = App.getCalculatorController();
     private static Canvas output = calculatorController.getOutput();
-    private static final double ACCELERATION_PIXEL_LENGTH = 200;
+
     /**
      * Renders all the force vectors, net force vector, net acceleration vector
      */
     public void render() {
-        // TODO: Replace with user-selected colors
+        // TODO: Replace with user-selected colors (?)
         Random rand = new Random();
 
         // Fetch all necessary data from FreeBodyLogic
         Vector2d[] forceVectors = FreeBodyLogic.getForceVectors();
+        Vector2d netForceVector = FreeBodyLogic.getNetForceVector();
         Vector2d netAccelerationVector = FreeBodyLogic.getNetAccelerationVector();
         double newtonPixelRatio = FreeBodyLogic.getNewtonPixelRatio();
 
@@ -35,8 +36,16 @@ public class FreeBodyDiagram {
 
         // Draw the acceleration vector at a static amount of pixel length
         if (calculatorController.getNetAccelerationCheckBox().isSelected()) {
+            Vector2d pixelNetForceVector = Calculator.convertToPixelLength(newtonPixelRatio, netForceVector);
             Vector2d normalizedAccelerationVector = netAccelerationVector.normalize();
-            drawVector(netAccelerationVector.mul(ACCELERATION_PIXEL_LENGTH), Color.GRAY);
+
+            double pixelLengthNetForce = pixelNetForceVector.length();
+            double pixelLengthAcceleration = pixelLengthNetForce * Config.MAX_ACCELERATION_VECTOR_COVERAGE;
+
+            Vector2d pixelAccelerationVector = normalizedAccelerationVector.mul(pixelLengthAcceleration);
+
+            // TODO: replace hardcoded gray color with user-picked color (?)
+            drawVector(pixelAccelerationVector, Color.GRAY);
         }
     }
 
