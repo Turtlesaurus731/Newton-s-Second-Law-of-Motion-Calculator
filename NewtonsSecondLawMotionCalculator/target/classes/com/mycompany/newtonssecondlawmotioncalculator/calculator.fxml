@@ -62,7 +62,7 @@
             <VBox alignment="BASELINE_LEFT" prefHeight="200.0" prefWidth="100.0" spacing="10.0">
                <children>
                   <CheckBox fx:id="netAccelerationCheckBox" mnemonicParsing="false" onAction="#onActionNetAccelerationCheckBox" text="Show Net Acceleration" />
-                  <CheckBox fx:id="darkModeToggleCheckBox" mnemonicParsing="false" onAction="#onActionDarkModeToggleCheckBox" text="Dark Mode Toggle" />
+                  <CheckBox fx:id="darkModeToggleCheckBox" mnemonicParsing="false" onAction="#onActionDarkModeToggleCheckBox" selected="true" text="Dark Mode Toggle" />
                </children>
                <padding>
                   <Insets top="20.0" />
