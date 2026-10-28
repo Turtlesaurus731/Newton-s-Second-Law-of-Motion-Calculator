@@ -33,6 +33,7 @@ public class Calculator {
      */
     public static double calculateNewtonToPixelRatio(Vector2d[] forceVectors) {
         if (forceVectors.length <= 0) {
+            // TODO: Think of using exceptions
             System.out.println("No force vectors provided to calculate ratio");
             return -1;
         }

@@ -15,12 +15,14 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.event.ActionEvent;
+import lombok.Getter;
 
 /**
  * FXML Controller class
  *
  * @author HP
  */
+@Getter
 public class CalculatorController implements Initializable {
 
     @FXML
