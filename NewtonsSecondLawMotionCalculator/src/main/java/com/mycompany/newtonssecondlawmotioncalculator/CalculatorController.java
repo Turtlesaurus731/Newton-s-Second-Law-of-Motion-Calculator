@@ -5,6 +5,7 @@
 package com.mycompany.newtonssecondlawmotioncalculator;
 
 import java.net.URL;
+import java.util.Objects;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -30,7 +31,7 @@ public class CalculatorController implements Initializable {
     @FXML
     private Canvas output;
     @FXML
-    private ListView<?> forceVectorListView;
+    private ListView<String> forceVectorListView;
     @FXML
     private TextField xForceVectorTextField;
     @FXML
@@ -57,22 +58,25 @@ public class CalculatorController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+
     }
 
     @FXML
     private void onActionAddButton(ActionEvent actionEvent) {
-        // TODO
+        String x = xForceVectorTextField.getText();
+        String y = yForceVectorTextField.getText();
+        forceVectorListView.getItems().addAll("<" + x + "," + y + ">"  + " Vector");
     }
 
     @FXML
     private void onActionRemoveButton(ActionEvent actionEvent) {
-        // TODO
+        int vector = forceVectorListView.getSelectionModel().getSelectedIndex();
+        forceVectorListView.getItems().remove(vector);
     }
 
     @FXML
     private void onActionResetButton(ActionEvent actionEvent) {
-        // TODO
+        forceVectorListView.getItems().clear();
     }
 
     @FXML
@@ -82,7 +86,13 @@ public class CalculatorController implements Initializable {
 
     @FXML
     private void onActionDarkModeToggleCheckBox(ActionEvent actionEvent) {
-        // TODO
+        if (darkModeToggleCheckBox.isSelected()) {
+            if (!root.getStylesheets().contains(getClass().getResource("/dark-theme.css").toExternalForm())) {
+                root.getStylesheets().add(getClass().getResource("/dark-theme.css").toExternalForm());
+            }
+        } else {
+            root.getStylesheets().remove(getClass().getResource("/dark-theme.css").toExternalForm());
+        }
     }
 
     @FXML
