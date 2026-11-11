@@ -16,6 +16,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.event.ActionEvent;
+import javafx.scene.layout.Pane;
 import lombok.Getter;
 
 /**
@@ -29,7 +30,7 @@ public class CalculatorController implements Initializable {
     @FXML
     private HBox root;
     @FXML
-    private Canvas output;
+    private Pane output;
     @FXML
     private ListView<String> forceVectorListView;
     @FXML
