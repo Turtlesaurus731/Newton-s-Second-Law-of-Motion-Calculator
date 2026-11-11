@@ -3,8 +3,12 @@ package com.mycompany.newtonssecondlawmotioncalculator;
 import lombok.Getter;
 import org.joml.Vector2d;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 public class FreeBodyLogic {
-    @Getter private static Vector2d[] forceVectors;
+    @Getter private static List<Vector2d> forceVectors = new ArrayList<>();
     @Getter private static Vector2d netForceVector;
     @Getter private static Vector2d netAccelerationVector;
     @Getter private static double mass;
@@ -15,7 +19,7 @@ public class FreeBodyLogic {
      * @param forceVectorsToCalculate The force vectors in Newtons
      */
     public static void setForceVectors(Vector2d... forceVectorsToCalculate) {
-        forceVectors = forceVectorsToCalculate;
+        forceVectors = List.of(forceVectorsToCalculate);
 
         // Update net force vector, acceleration & newton pixel ratio accordingly
         netForceVector = Calculator.calculateNetForceVector(forceVectors);

@@ -4,26 +4,39 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
 import org.joml.Random;
 import org.joml.Vector2d;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class FreeBodyDiagram {
 
-    private static CalculatorController calculatorController = App.getCalculatorController();
-    private static Pane output = calculatorController.getOutput();
+    private static Pane output;
+
+    public static void initialize() {
+        output = App.calculatorController.getOutput();
+    }
 
     /**
      * Renders all the force vectors, net force vector, net acceleration vector
      */
-    public void render() {
+    public static void render() {
+
         // TODO: Replace with user-selected colors (?)
         Random rand = new Random();
 
+        output.getChildren().clear();
+
         // Fetch all necessary data from FreeBodyLogic
-        Vector2d[] forceVectors = FreeBodyLogic.getForceVectors();
+        List<Vector2d> forceVectors = FreeBodyLogic.getForceVectors();
         Vector2d netForceVector = FreeBodyLogic.getNetForceVector();
         Vector2d netAccelerationVector = FreeBodyLogic.getNetAccelerationVector();
         double newtonPixelRatio = FreeBodyLogic.getNewtonPixelRatio();
+
+        System.out.println(forceVectors);
 
         // Draw all the force vectors accordingly with newton-pixel ratio
         for (Vector2d forceVector : forceVectors) {
@@ -36,7 +49,7 @@ public class FreeBodyDiagram {
         }
 
         // Draw the acceleration vector at a static amount of pixel length
-        if (calculatorController.getNetAccelerationCheckBox().isSelected()) {
+        if (App.calculatorController.getNetAccelerationCheckBox().isSelected()) {
             Vector2d pixelNetForceVector = Calculator.convertToPixelLength(newtonPixelRatio, netForceVector);
             Vector2d normalizedAccelerationVector = netAccelerationVector.normalize();
 
@@ -53,17 +66,19 @@ public class FreeBodyDiagram {
     /**
      * Draws a vector in the center of the canvas/output
      */
-    public void drawVector(Vector2d pixelVector, Color color) {
+    public static void drawVector(Vector2d pixelVector, Color color) {
         // Constants for the line coordinates
-//        final double START_X = output.getWidth() / 2;
-//        final double START_Y = output.getHeight() / 2;
-//        final double END_X = output.getWidth() + pixelVector.x();
-//        final double END_Y = output.getWidth() + pixelVector.y();
-//
-//        // Create the line
-//        GraphicsContext graphicsContext = output.getGraphicsContext2D();
-//
-//        graphicsContext.setStroke(color);
-//        graphicsContext.strokeLine(START_X, START_Y, END_X, END_Y);
+        final double START_X = output.getLayoutX() + output.getWidth() / 2;
+        final double START_Y = output.getLayoutY() + output.getHeight() / 2;
+        final double END_X = START_X + pixelVector.x();
+        final double END_Y = START_Y + pixelVector.y();
+
+        // Create the line
+        Line lineVector = new Line(START_X, START_Y, END_X, END_Y);
+        lineVector.setStroke(color);
+
+        output.getChildren().add(lineVector);
+
+        System.out.println("Vector drawn");
     }
 }

@@ -2,6 +2,7 @@ package com.mycompany.newtonssecondlawmotioncalculator;
 
 import org.joml.Vector2d;
 import java.util.Arrays;
+import java.util.List;
 
 public class Calculator {
     /**
@@ -9,9 +10,9 @@ public class Calculator {
      * @param forceVectors The force vectors in Newtons
      * @return The net force vector in Newtons
      */
-    public static Vector2d calculateNetForceVector(Vector2d... forceVectors) {
+    public static Vector2d calculateNetForceVector(List<Vector2d> forceVectors) {
         Vector2d netForceVector = new Vector2d();
-        Arrays.stream(forceVectors).forEach(netForceVector::add);
+        forceVectors.stream().forEach(netForceVector::add);
         return netForceVector;
     }
 
@@ -30,8 +31,8 @@ public class Calculator {
      * @param forceVectors The force vectors that will be rendered in canvas
      * @return The Newton-Pixel ratio that fits all the force vectors in the canvas
      */
-    public static double calculateNewtonToPixelRatio(Vector2d[] forceVectors) {
-        if (forceVectors.length <= 0) {
+    public static double calculateNewtonToPixelRatio(List<Vector2d> forceVectors) {
+        if (forceVectors.size() <= 0) {
             // TODO: Think of using exceptions
             System.out.println("No force vectors provided to calculate ratio");
             return -1;
@@ -43,7 +44,7 @@ public class Calculator {
         final double HALF_SIZE  = CANVAS_SIZE_X / 2;
         final double PIXEL_LENGTH_BASE = HALF_SIZE * Config.MAX_VECTOR_COVERAGE;
 
-        Vector2d maximumForceVector = forceVectors[0];
+        Vector2d maximumForceVector = forceVectors.get(0);
 
         for (Vector2d forceVector : forceVectors) {
             if (forceVector.length() > maximumForceVector.length()) {

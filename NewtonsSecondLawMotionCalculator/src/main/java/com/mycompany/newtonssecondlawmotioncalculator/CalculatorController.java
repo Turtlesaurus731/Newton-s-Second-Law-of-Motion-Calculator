@@ -4,20 +4,23 @@
  */
 package com.mycompany.newtonssecondlawmotioncalculator;
 
+import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.ResourceBundle;
+
+import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.event.ActionEvent;
 import javafx.scene.layout.Pane;
 import lombok.Getter;
+import org.joml.Vector2d;
 
 /**
  * FXML Controller class
@@ -59,20 +62,33 @@ public class CalculatorController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
+        forceVectorListView.getItems().addListener((ListChangeListener<? super String>) change -> {
+            FreeBodyDiagram.render();
+        });
     }
 
     @FXML
     private void onActionAddButton(ActionEvent actionEvent) {
         String x = xForceVectorTextField.getText();
         String y = yForceVectorTextField.getText();
-        forceVectorListView.getItems().addAll("<" + x + "," + y + ">"  + " Vector");
+
+        int xInt = Integer.valueOf(x);
+        int yInt = Integer.valueOf(y);
+
+        FreeBodyLogic.getForceVectors().add(new Vector2d(xInt, yInt));
+
+        forceVectorListView.getItems().add("<" + x + "," + y + ">"  + " Vector");
     }
 
     @FXML
     private void onActionRemoveButton(ActionEvent actionEvent) {
-        int vector = forceVectorListView.getSelectionModel().getSelectedIndex();
-        forceVectorListView.getItems().remove(vector);
+        int selectedIdx = forceVectorListView.getSelectionModel().getSelectedIndex();
+
+        if (selectedIdx == -1) {
+            return;
+        }
+
+        forceVectorListView.getItems().remove(selectedIdx);
     }
 
     @FXML
@@ -97,8 +113,9 @@ public class CalculatorController implements Initializable {
     }
 
     @FXML
-    public void onActionInfoButton(ActionEvent actionEvent) {
+    public void onActionInfoButton(ActionEvent actionEvent) throws IOException {
         // TODO
+
     }
     
 }
