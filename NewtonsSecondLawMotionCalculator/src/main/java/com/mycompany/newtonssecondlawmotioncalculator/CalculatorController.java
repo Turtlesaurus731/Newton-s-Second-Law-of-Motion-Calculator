@@ -110,7 +110,7 @@ public class CalculatorController implements Initializable {
         alert.setHeaderText(null);
 
         try {
-            VBox loadedInfoContent = FXMLLoader.load(getClass().getResource("/resources.informationImage.fxml"));
+            HBox loadedInfoContent = FXMLLoader.load(getClass().getResource("information.fxml"));
 
             alert.getDialogPane().setExpandableContent(loadedInfoContent);
         } catch (IOException e) {
