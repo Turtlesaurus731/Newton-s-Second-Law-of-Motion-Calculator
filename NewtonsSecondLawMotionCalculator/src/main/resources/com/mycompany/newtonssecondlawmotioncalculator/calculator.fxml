@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
@@ -15,7 +15,7 @@
    <children>
       <StackPane alignment="CENTER_RIGHT" nodeOrientation="RIGHT_TO_LEFT" style="-fx-background-color: #ffffff;">
          <children>
-            <Canvas fx:id="output" height="500.0" nodeOrientation="RIGHT_TO_LEFT" style="-fx-background-color: #ffffff;" width="500.0" />
+            <Pane fx:id="output" prefHeight="500.0" prefWidth="500.0" style="-fx-background-color: #ffffff;" />
          </children>
       </StackPane>
       <VBox alignment="CENTER" spacing="10.0">
