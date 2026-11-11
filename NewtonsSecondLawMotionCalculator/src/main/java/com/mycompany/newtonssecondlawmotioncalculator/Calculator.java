@@ -40,10 +40,8 @@ public class Calculator {
         CalculatorController calculatorController = App.getCalculatorController();
 
         final double CANVAS_SIZE_X = calculatorController.getOutput().getWidth();
-        final double CANVAS_SIZE_Y = calculatorController.getOutput().getHeight();
-        final double CANVAS_CENTER = CANVAS_SIZE_X / 2;
-        final double VECTOR_COVERAGE = 80; // How much of the canvas the maximum vector covers in %
-        final double PIXEL_LENGTH_BASE = CANVAS_SIZE_X * (VECTOR_COVERAGE / 100);
+        final double HALF_SIZE  = CANVAS_SIZE_X / 2;
+        final double PIXEL_LENGTH_BASE = HALF_SIZE * Config.MAX_VECTOR_COVERAGE;
 
         Vector2d maximumForceVector = forceVectors[0];
 
