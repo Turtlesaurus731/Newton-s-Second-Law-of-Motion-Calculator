@@ -100,8 +100,6 @@ public class CalculatorController implements Initializable {
 
     @FXML
     public void onActionInfoButton(ActionEvent actionEvent) {
-
-
         Image image = new Image("/InformationImage01.png");
         ImageView icon = new ImageView(image);
 
@@ -111,7 +109,6 @@ public class CalculatorController implements Initializable {
 
         try {
             HBox loadedInfoContent = FXMLLoader.load(getClass().getResource("information.fxml"));
-
             alert.getDialogPane().setExpandableContent(loadedInfoContent);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -119,7 +116,6 @@ public class CalculatorController implements Initializable {
 
 //        alert.setGraphic(icon);
         alert.setContentText("temp");
-
         alert.showAndWait();
     }
     
