@@ -1,16 +1,12 @@
 package com.mycompany.newtonssecondlawmotioncalculator;
 
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import org.joml.Random;
 import org.joml.Vector2d;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class FreeBodyDiagram {
 

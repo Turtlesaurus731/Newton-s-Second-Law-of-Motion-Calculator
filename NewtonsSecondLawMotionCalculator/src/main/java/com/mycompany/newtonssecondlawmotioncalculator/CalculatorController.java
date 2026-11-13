@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.function.UnaryOperator;
 
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
@@ -23,6 +24,7 @@ import javafx.scene.layout.HBox;
 import javafx.event.ActionEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.util.converter.DoubleStringConverter;
 import lombok.Getter;
 import org.joml.Vector2d;
 
@@ -69,6 +71,21 @@ public class CalculatorController implements Initializable {
         forceVectorListView.getItems().addListener((ListChangeListener<? super String>) change -> {
             FreeBodyDiagram.render();
         });
+
+        // Filter user input for number fields
+        UnaryOperator<TextFormatter.Change> numberFilter = change -> {
+            String newText = change.getControlNewText();
+            
+            if (newText.matches("\\d*\\.?\\d*")) {
+                return change;
+            }
+            
+            return null;
+        };
+
+        xForceVectorTextField.setTextFormatter(new TextFormatter<Double>(new DoubleStringConverter(), null, numberFilter));
+        yForceVectorTextField.setTextFormatter(new TextFormatter<Double>(new DoubleStringConverter(), null, numberFilter));
+        massTextField.setTextFormatter(new TextFormatter<Double>(new DoubleStringConverter(), null, numberFilter));
     }
 
     @FXML
@@ -76,8 +93,8 @@ public class CalculatorController implements Initializable {
         String x = xForceVectorTextField.getText();
         String y = yForceVectorTextField.getText();
 
-        int xInt = Integer.valueOf(x);
-        int yInt = Integer.valueOf(y);
+        double xInt = Double.valueOf(x);
+        double yInt = Double.valueOf(y);
 
         FreeBodyLogic.getForceVectors().add(new Vector2d(xInt, yInt));
 
