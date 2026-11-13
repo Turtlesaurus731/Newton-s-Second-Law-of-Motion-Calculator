@@ -6,6 +6,7 @@ import javafx.scene.shape.Line;
 import org.joml.Random;
 import org.joml.Vector2d;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class FreeBodyDiagram {
@@ -27,7 +28,7 @@ public class FreeBodyDiagram {
         output.getChildren().clear();
 
         // Fetch all necessary data from FreeBodyLogic
-        List<Vector2d> forceVectors = FreeBodyLogic.getForceVectors();
+        List<Vector2d> forceVectors = new ArrayList<>(FreeBodyLogic.getForceVectors().values());
         Vector2d netForceVector = FreeBodyLogic.getNetForceVector();
         Vector2d netAccelerationVector = FreeBodyLogic.getNetAccelerationVector();
         double newtonPixelRatio = FreeBodyLogic.getNewtonPixelRatio();
