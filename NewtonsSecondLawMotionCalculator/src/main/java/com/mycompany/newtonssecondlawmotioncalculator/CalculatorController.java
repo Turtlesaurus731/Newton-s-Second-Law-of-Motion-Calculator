@@ -6,24 +6,19 @@ package com.mycompany.newtonssecondlawmotioncalculator;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.function.UnaryOperator;
 
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.event.ActionEvent;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 import javafx.util.converter.DoubleStringConverter;
 import lombok.Getter;
 import org.joml.Vector2d;
@@ -41,7 +36,7 @@ public class CalculatorController implements Initializable {
     @FXML
     private Pane output;
     @FXML
-    private ListView<String> forceVectorListView;
+    private ListView<VisualVector> forceVectorListView;
     @FXML
     private TextField xForceVectorTextField;
     @FXML
@@ -68,7 +63,8 @@ public class CalculatorController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        forceVectorListView.getItems().addListener((ListChangeListener<? super String>) change -> {
+        // Detect changes in list view and re-render diagram
+        forceVectorListView.getItems().addListener((ListChangeListener<? super VisualVector>) change -> {
             FreeBodyDiagram.render();
         });
 
@@ -90,15 +86,21 @@ public class CalculatorController implements Initializable {
 
     @FXML
     private void onActionAddButton(ActionEvent actionEvent) {
-        String x = xForceVectorTextField.getText();
-        String y = yForceVectorTextField.getText();
+        String xString = xForceVectorTextField.getText();
+        String yString = yForceVectorTextField.getText();
 
-        double xInt = Double.valueOf(x);
-        double yInt = Double.valueOf(y);
+        double x = Double.valueOf(xString);
+        double y = Double.valueOf(yString);
 
-        FreeBodyLogic.getForceVectors().add(new Vector2d(xInt, yInt));
+        String uuid = UUID.randomUUID().toString();
+        Vector2d vector = new Vector2d(x, y);
 
-        forceVectorListView.getItems().add("<" + x + "," + y + ">"  + " Vector");
+        VisualVector visualVector = new VisualVector(uuid, vector, VectorType.FORCE);
+
+        FreeBodyLogic.getVisualVectors().put(visualVector.getUuid(), visualVector);
+        FreeBodyLogic.setForceVector(uuid, visualVector.getVector());
+
+        forceVectorListView.getItems().add(visualVector);
     }
 
     @FXML
@@ -109,7 +111,14 @@ public class CalculatorController implements Initializable {
             return;
         }
 
-        forceVectorListView.getItems().remove(selectedIdx);
+        VisualVector selectedVisualVector = forceVectorListView.getItems().get(selectedIdx);
+
+        // Remove all outside references to the visual vector
+        FreeBodyLogic.getVisualVectors().remove(selectedVisualVector.getUuid());
+        FreeBodyLogic.removeForceVector(selectedVisualVector.getUuid());
+
+        // Remove the visual vector from the list view (and de-render it)
+        forceVectorListView.getItems().remove(selectedVisualVector);
     }
 
     @FXML
