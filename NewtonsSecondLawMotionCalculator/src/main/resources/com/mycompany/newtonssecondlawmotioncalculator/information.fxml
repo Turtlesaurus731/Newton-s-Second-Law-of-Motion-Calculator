@@ -9,9 +9,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<HBox fx:id="infoContainer" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="1000.0" stylesheets="@../../../dark-theme.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1">
+<HBox fx:id="infoContainer" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="1000.0" style="-fx-base: #11141c; -fx-background-color: #121829; -fx-control-inner-background: #202530;" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <VBox prefHeight="200.0" prefWidth="100.0">
+      <VBox prefHeight="417.0" prefWidth="581.0">
          <children>
             <ImageView fitHeight="325.0" fitWidth="581.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -27,31 +27,31 @@
                   <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
                </padding>
                <children>
-                  <Label style="-fx-font: bold;" text="1. Adding Force Vector">
+                  <Label style="-fx-font-weight: bold; -fx-text-fill: #cd1212;" text="1. Adding Force Vector" textFill="#cd1212">
                      <font>
                         <Font name="System Bold" size="12.0" />
                      </font>
                   </Label>
                   <Label prefWidth="387.0" text="To add a force vector, you need to input the x and why coordinate of &#10;the vector of the corresponding boxes. &#10;(The box on the left is for x coordinate and the box on the right is for&#10; the y coordinate)&#10;&#10;Once having written down your vectors components into the textfields,&#10;you may press the add button. Once pressed, your vector should apear &#10;in the section number 2. &#10;&#10;If you want to remove a force vector, you must select the undesirable &#10;vector in section 2 by clicking it with your cursor. &#10;You may then press the remove button and it should remove it &#10;&#10;The resset button will remove all force vectors and will wipe the all the &#10;texfields clean. " />
-                  <Label text="2. List of Currently Added Force Vectors">
+                  <Label style="-fx-text-fill: #ebe715;" text="2. List of Currently Added Force Vectors">
                      <font>
                         <Font name="System Bold" size="12.0" />
                      </font>
                   </Label>
                   <Label text="All your force vectors will apear here as a list. You may select specific &#10;vectors and remove them as you see fit via the remove button from the &#10;section number 1. &#10;&#10;Force vectors will apear under this format:&#10;&lt;&quot;x coordinate&quot;, &quot;y coordinate&quot;&gt;&#10;" />
-                  <Label text="3. Adding Mass and Acceleration Toggle">
+                  <Label style="-fx-text-fill: #1bbc81;" text="3. Adding Mass and Acceleration Toggle">
                      <font>
                         <Font name="System Bold" size="12.0" />
                      </font>
                   </Label>
                   <Label text="Here you can add the mass, it should autimatically update the graph that&#10;apears in section 4 if there are force vectors listed in section 2. &#10;You may check &quot;Show Net Acceleration&quot; to display an additional &#10;vector in section 4 that shows the net Acceleration&#10;" />
-                  <Label text="4. The Graph Display">
+                  <Label style="-fx-text-fill: #cd6520;" text="4. The Graph Display">
                      <font>
                         <Font name="System Bold" size="12.0" />
                      </font>
                   </Label>
                   <Label text="Whenever you add a force vector, mass and or toggle on the &#10;Acceleration, The resulting vectors should apear here on screen. &#10;You can also hover over and press any vector in the section 4 to &#10;have its details be displayed" />
-                  <Label text="5. Personalization">
+                  <Label style="-fx-text-fill: #40c628;" text="5. Personalization">
                      <font>
                         <Font name="System Bold" size="12.0" />
                      </font>
