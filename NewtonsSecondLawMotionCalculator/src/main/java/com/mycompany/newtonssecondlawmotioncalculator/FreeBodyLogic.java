@@ -3,27 +3,43 @@ package com.mycompany.newtonssecondlawmotioncalculator;
 import lombok.Getter;
 import org.joml.Vector2d;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class FreeBodyLogic {
-    @Getter private static List<Vector2d> forceVectors = new ArrayList<>();
+    @Getter private static Map<String, VisualVector> visualVectors = new HashMap<>();
+    @Getter private static Map<String, Vector2d> forceVectors = new HashMap<>();
     @Getter private static Vector2d netForceVector;
     @Getter private static Vector2d netAccelerationVector;
     @Getter private static double mass;
     @Getter private static double newtonPixelRatio;
 
     /**
-     * Sets the force vectors and updates net force vector & net acceleration vector where possible
-     * @param forceVectorsToCalculate The force vectors in Newtons
+     * Sets the force vector and updates net force vector & net acceleration vector where possible
+     * @param uuid The UUID of the force vector
+     * @param forceVector The force vector to add
      */
-    public static void setForceVectors(Vector2d... forceVectorsToCalculate) {
-        forceVectors = List.of(forceVectorsToCalculate);
+    public static void setForceVector(String uuid, Vector2d forceVector) {
+        forceVectors.put(uuid, forceVector);
+        updateValues();
+    }
 
-        // Update net force vector, acceleration & newton pixel ratio accordingly
-        netForceVector = Calculator.calculateNetForceVector(forceVectors);
-        newtonPixelRatio = Calculator.calculateNewtonToPixelRatio(forceVectors);
+    /**
+     * Removes the force vector and updates net force vector & net acceleration vector where possible
+     * @param uuid The UUID of the force vector
+     */
+    public static void removeForceVector(String uuid) {
+        forceVectors.remove(uuid);
+        updateValues();
+    }
+
+    /**
+     * Updates the values of netForceVector, newtonPixelRatio and netAccelerationVector
+     */
+    public static void updateValues() {
+        List<Vector2d> forceVectorsList = new ArrayList<>(forceVectors.values());
+
+        netForceVector = Calculator.calculateNetForceVector(forceVectorsList);
+        newtonPixelRatio = Calculator.calculateNewtonToPixelRatio(forceVectorsList);
 
         if (mass > 0) {
             netAccelerationVector = Calculator.calculateNetAccelerationVector(netForceVector, mass);
