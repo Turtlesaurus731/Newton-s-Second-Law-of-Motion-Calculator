@@ -1,4 +1,4 @@
-.root {
+.root, .dialog-pane {
     -fx-base: #11141c;
     -fx-background-color: #121829;
     -fx-control-inner-background: #202530;
