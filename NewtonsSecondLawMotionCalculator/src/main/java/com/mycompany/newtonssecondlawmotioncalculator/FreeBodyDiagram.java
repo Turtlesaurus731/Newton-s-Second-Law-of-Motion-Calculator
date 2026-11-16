@@ -2,6 +2,7 @@ package com.mycompany.newtonssecondlawmotioncalculator;
 
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import org.joml.Random;
 import org.joml.Vector2d;
@@ -67,13 +68,23 @@ public class FreeBodyDiagram {
         // Constants for the line coordinates
         final double START_X = output.getLayoutX() + output.getWidth() / 2;
         final double START_Y = output.getLayoutY() + output.getHeight() / 2;
-        final double END_X = START_X + pixelVector.x();
-        final double END_Y = START_Y + pixelVector.y();
+        final double END_X = START_X - pixelVector.x();
+        final double END_Y = START_Y - pixelVector.y();
 
         // Create the line
         Line lineVector = new Line(START_X, START_Y, END_X, END_Y);
         lineVector.setStroke(color);
 
+        // TODO: debug circles
+        Circle circle = new Circle(20, Color.BLUE);
+        Circle circle2 = new Circle(20, Color.RED);
+
+        circle.setLayoutX(START_X);
+        circle.setLayoutY(START_Y);
+        circle2.setLayoutX(END_X);
+        circle2.setLayoutY(END_Y);
+
+        output.getChildren().addAll(circle, circle2);
         output.getChildren().add(lineVector);
 
         System.out.println("Vector drawn");
