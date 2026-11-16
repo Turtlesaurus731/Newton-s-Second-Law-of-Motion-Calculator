@@ -15,24 +15,32 @@ import java.io.IOException;
 public class App extends Application {
 
     @Getter private static Scene scene;
-    @Getter private static CalculatorController calculatorController;
+    @Getter protected static CalculatorController calculatorController;
 
     @Override
     public void start(Stage stage) throws IOException {
-        Parent root = loadFXML("calculator");
+        FXMLLoader calculatorFXML = getFXMLLoader("calculator");
+        Parent root = calculatorFXML.load();
+        calculatorController = calculatorFXML.getController();
+
+        FreeBodyDiagram.initialize();
+
         scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
     }
 
     static void setRoot(String fxml) throws IOException {
-        scene.setRoot(loadFXML(fxml));
+        scene.setRoot(getFXMLLoader(fxml).load());
     }
 
-    private static Parent loadFXML(String fxml) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml + ".fxml"));
-        calculatorController = fxmlLoader.getController();
-        return fxmlLoader.load();
+    public static FXMLLoader getFXMLLoader(String fxml) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml + ".fxml"));
+            return fxmlLoader;
+        } catch(Exception e) {
+            return null;
+        }
     }
 
     public static void main(String[] args) {

@@ -6,20 +6,22 @@ package com.mycompany.newtonssecondlawmotioncalculator;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Objects;
-import java.util.ResourceBundle;
+import java.util.*;
+import java.util.function.UnaryOperator;
+
+import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.event.ActionEvent;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
+import javafx.util.converter.DoubleStringConverter;
 import lombok.Getter;
+import org.joml.Vector2d;
 
 /**
  * FXML Controller class
@@ -34,7 +36,7 @@ public class CalculatorController implements Initializable {
     @FXML
     private Pane output;
     @FXML
-    private ListView<String> forceVectorListView;
+    private ListView<VisualVector> forceVectorListView;
     @FXML
     private TextField xForceVectorTextField;
     @FXML
@@ -61,20 +63,62 @@ public class CalculatorController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        // Detect changes in list view and re-render diagram
+        forceVectorListView.getItems().addListener((ListChangeListener<? super VisualVector>) change -> {
+            FreeBodyDiagram.render();
+        });
 
+        // Filter user input for number fields
+        UnaryOperator<TextFormatter.Change> numberFilter = change -> {
+            String newText = change.getControlNewText();
+            
+            if (newText.matches("\\d*\\.?\\d*")) {
+                return change;
+            }
+            
+            return null;
+        };
+
+        xForceVectorTextField.setTextFormatter(new TextFormatter<Double>(new DoubleStringConverter(), null, numberFilter));
+        yForceVectorTextField.setTextFormatter(new TextFormatter<Double>(new DoubleStringConverter(), null, numberFilter));
+        massTextField.setTextFormatter(new TextFormatter<Double>(new DoubleStringConverter(), null, numberFilter));
     }
 
     @FXML
     private void onActionAddButton(ActionEvent actionEvent) {
-        String x = xForceVectorTextField.getText();
-        String y = yForceVectorTextField.getText();
-        forceVectorListView.getItems().addAll("<" + x + "," + y + ">"  + " Vector");
+        String xString = xForceVectorTextField.getText();
+        String yString = yForceVectorTextField.getText();
+
+        double x = Double.valueOf(xString);
+        double y = Double.valueOf(yString);
+
+        String uuid = UUID.randomUUID().toString();
+        Vector2d vector = new Vector2d(x, y);
+
+        VisualVector visualVector = new VisualVector(uuid, vector, VectorType.FORCE);
+
+        FreeBodyLogic.getVisualVectors().put(visualVector.getUuid(), visualVector);
+        FreeBodyLogic.setForceVector(uuid, visualVector.getVector());
+
+        forceVectorListView.getItems().add(visualVector);
     }
 
     @FXML
     private void onActionRemoveButton(ActionEvent actionEvent) {
-        int vector = forceVectorListView.getSelectionModel().getSelectedIndex();
-        forceVectorListView.getItems().remove(vector);
+        int selectedIdx = forceVectorListView.getSelectionModel().getSelectedIndex();
+
+        if (selectedIdx == -1) {
+            return;
+        }
+
+        VisualVector selectedVisualVector = forceVectorListView.getItems().get(selectedIdx);
+
+        // Remove all outside references to the visual vector
+        FreeBodyLogic.getVisualVectors().remove(selectedVisualVector.getUuid());
+        FreeBodyLogic.removeForceVector(selectedVisualVector.getUuid());
+
+        // Remove the visual vector from the list view (and de-render it)
+        forceVectorListView.getItems().remove(selectedVisualVector);
     }
 
     @FXML
