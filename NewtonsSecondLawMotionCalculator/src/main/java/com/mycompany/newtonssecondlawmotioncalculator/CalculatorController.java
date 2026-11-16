@@ -72,7 +72,7 @@ public class CalculatorController implements Initializable {
         UnaryOperator<TextFormatter.Change> numberFilter = change -> {
             String newText = change.getControlNewText();
             
-            if (newText.matches("\\d*\\.?\\d*")) {
+            if (newText.matches("-?\\d*\\.?\\d*")) {
                 return change;
             }
             
@@ -124,6 +124,9 @@ public class CalculatorController implements Initializable {
     @FXML
     private void onActionResetButton(ActionEvent actionEvent) {
         forceVectorListView.getItems().clear();
+        output.getChildren().clear();
+        FreeBodyLogic.getForceVectors().clear();
+        FreeBodyLogic.getVisualVectors().clear();
     }
 
     @FXML
