@@ -23,7 +23,7 @@
                   <Line endY="250.0" startX="508.0" startY="250.0" />
                   <Polygon layoutX="250.0" layoutY="58.0" points="-9.0, -36.0, 9.0, -36.0, 0.0, -60.0" stroke="BLACK" strokeType="INSIDE" />
                   <Polygon layoutX="8.0" layoutY="298.0" points="-9.0, -36.0, 9.0, -36.0, 0.0, -60.0" rotate="270.0" stroke="BLACK" strokeType="INSIDE" />
-                  <Label layoutX="225.0" layoutY="14.0" prefHeight="17.0" prefWidth="1.0" text="Y" />
+                  <Label layoutX="230.0" layoutY="14.0" prefHeight="17.0" prefWidth="1.0" text="Y" />
                   <Label layoutX="16.0" layoutY="260.0" text="X" />
                </children></Pane>
          </children>
