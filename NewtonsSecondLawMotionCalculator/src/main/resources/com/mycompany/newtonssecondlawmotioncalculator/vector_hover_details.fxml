@@ -5,9 +5,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="246.0" prefWidth="333.0" stylesheets="@../../../vector-hover-dark.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1">
+<VBox fx:id="rootHoverDetails" alignment="CENTER" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="246.0" prefWidth="333.0" stylesheets="@../../../vector-hover-dark.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Label text="Vector Title">
+      <Label fx:id="vectorTitleLabel" text="Vector Title">
          <font>
             <Font name="System Bold" size="20.0" />
          </font>
@@ -17,10 +17,10 @@
       </Label>
       <VBox fx:id="infoBox" prefWidth="307.0" spacing="15.0" styleClass="info-box">
          <children>
-            <Label text="Vector Components: &lt;x, y&gt;" />
-            <Label text="Vector Magnitude: undetermined" />
-            <Label text="Vector Angle: undefined" />
-            <Label text="Order in Force Vector list: undetermined" />
+            <Label fx:id="vectorComponentsLabel" text="Vector Components: &lt;x, y&gt;" />
+            <Label fx:id="vectorMagnitudeLabel" text="Vector Magnitude: undetermined" />
+            <Label fx:id="vectorAngleLabel" text="Vector Angle: undefined" />
+            <Label fx:id="vectorORderInListLabel" text="Order in Force Vector list: undetermined" />
          </children>
          <padding>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
