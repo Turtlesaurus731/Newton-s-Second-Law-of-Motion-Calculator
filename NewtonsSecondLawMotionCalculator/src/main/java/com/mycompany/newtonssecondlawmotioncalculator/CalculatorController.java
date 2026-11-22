@@ -13,6 +13,7 @@ import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -20,6 +21,7 @@ import javafx.scene.layout.HBox;
 import javafx.event.ActionEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Shape;
 import javafx.util.converter.DoubleStringConverter;
 import lombok.Getter;
 import org.joml.Vector2d;
@@ -58,10 +60,13 @@ public class CalculatorController implements Initializable {
     //Temporary before enzo fix on his end
     @FXML
     private CheckBox darkModeToggleCheckBox;
-
     /**
      * Initializes the controller class.
      */
+    public static boolean isSelected;
+
+    private VectorHoverDetailsController hoverDetailsController;
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // Detect changes in list view and re-render diagram
@@ -72,6 +77,13 @@ public class CalculatorController implements Initializable {
                 // Ignored;
             }
         });
+
+        for (Pane arrowNode: FreeBodyDiagram.arrowNodes) {
+            for (Node arrowShape: arrowNode.getChildren()) {
+                arrowShape.setOnMouseEntered(mouseEvent -> {});
+            }
+
+        }
 
         // Filter user input for number fields
         UnaryOperator<TextFormatter.Change> numberFilter = change -> {
@@ -87,6 +99,17 @@ public class CalculatorController implements Initializable {
         xForceVectorTextField.setTextFormatter(new TextFormatter<Double>(new DoubleStringConverter(), null, numberFilter));
         yForceVectorTextField.setTextFormatter(new TextFormatter<Double>(new DoubleStringConverter(), null, numberFilter));
         massTextField.setTextFormatter(new TextFormatter<Double>(new DoubleStringConverter(), null, numberFilter));
+
+        netAccelerationCheckBox.selectedProperty().addListener(ov->{
+            isSelected = netAccelerationCheckBox.isSelected();
+            try {
+                FreeBodyDiagram.render();
+            } catch (IOException e) {
+               //ignore
+            }
+        });
+
+
     }
 
     @FXML
@@ -143,9 +166,14 @@ public class CalculatorController implements Initializable {
         if (darkModeToggleCheckBox.isSelected()) {
             if (!root.getStylesheets().contains(getClass().getResource("/dark-theme.css").toExternalForm())) {
                 root.getStylesheets().add(getClass().getResource("/dark-theme.css").toExternalForm());
+                hoverDetailsController.setDarkMode(true);
             }
         } else {
             root.getStylesheets().remove(getClass().getResource("/dark-theme.css").toExternalForm());
+            hoverDetailsController.setDarkMode(false);
+        }
+        if (hoverDetailsController != null) {
+            hoverDetailsController.setDarkMode(darkModeToggleCheckBox.isSelected());
         }
     }
 
@@ -169,5 +197,11 @@ public class CalculatorController implements Initializable {
         alert.setContentText("temp");
         alert.showAndWait();
     }
-    
+
+    public void setHoverDetailsController(VectorHoverDetailsController hoverDetailsController) {
+        this.hoverDetailsController = hoverDetailsController;
+        if (this.hoverDetailsController != null && darkModeToggleCheckBox != null) {
+            this.hoverDetailsController.setDarkMode(darkModeToggleCheckBox.isSelected());
+        }
+    }
 }
