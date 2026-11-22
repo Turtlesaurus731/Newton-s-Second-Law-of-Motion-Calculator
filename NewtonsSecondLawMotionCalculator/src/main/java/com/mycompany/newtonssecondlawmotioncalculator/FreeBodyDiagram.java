@@ -1,5 +1,9 @@
 package com.mycompany.newtonssecondlawmotioncalculator;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -7,86 +11,96 @@ import javafx.scene.shape.Line;
 import org.joml.Random;
 import org.joml.Vector2d;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class FreeBodyDiagram {
 
     private static Pane output;
+    private static ObservableList<Pane> arrowNodes = FXCollections.observableList(new ArrayList<>());
 
-    public static void initialize() {
+    private static Arrow netAccelerationArrow;
+    private static Arrow netForceArrow;
+
+    public static void initialize() throws IOException {
         output = App.calculatorController.getOutput();
+
+        netAccelerationArrow = loadArrow(Color.DARKRED);
+        netForceArrow = loadArrow(Color.DARKBLUE);
+    }
+
+    private static Arrow loadArrow(Color color) throws IOException {
+        FXMLLoader loader = App.getFXMLLoader("arrow");
+        loader.load();
+
+        Arrow arrowController = loader.getController();
+        arrowController.setColor(color);
+
+        return arrowController;
+    }
+
+    private static void renderArrow(Arrow arrowController, Vector2d pixelVector) {
+        if (pixelVector == null) {
+            return;
+        }
+
+        final double START_X = output.getLayoutX() + output.getWidth() / 2;
+        final double START_Y = output.getLayoutY() + output.getHeight() / 2;
+
+        arrowController.setPoints(
+                START_X,
+                START_X - pixelVector.x(),
+                START_Y,
+                START_Y - pixelVector.y()
+        );
+
+        Pane arrowNode = arrowController.getRoot();
+        arrowNodes.add(arrowNode);
+        output.getChildren().add(arrowNode);
     }
 
     /**
      * Renders all the force vectors, net force vector, net acceleration vector
      */
-    public static void render() {
+    public static void render() throws IOException {
+        resetDiagram();
 
-        // TODO: Replace with user-selected colors (?)
-        Random rand = new Random();
+        List<VisualVector> visualVectors = new ArrayList<>(FreeBodyLogic.getVisualVectors().values());
 
-        output.getChildren().clear();
+        // Avoids drawing net force arrow and net accel arrow if there is nothing
+        if (visualVectors.isEmpty()) {
+            return;
+        }
 
         // Fetch all necessary data from FreeBodyLogic
-        List<Vector2d> forceVectors = new ArrayList<>(FreeBodyLogic.getForceVectors().values());
         Vector2d netForceVector = FreeBodyLogic.getNetForceVector();
         Vector2d netAccelerationVector = FreeBodyLogic.getNetAccelerationVector();
         double newtonPixelRatio = FreeBodyLogic.getNewtonPixelRatio();
 
-        System.out.println(forceVectors);
-
         // Draw all the force vectors accordingly with newton-pixel ratio
-        for (Vector2d forceVector : forceVectors) {
+        for (VisualVector visualVector : visualVectors) {
+            if (visualVector.getVectorType() != VectorType.FORCE) {
+                continue;
+            }
+
+            Vector2d forceVector = visualVector.getVector();
             Vector2d pixelForceVector = Calculator.convertToPixelLength(newtonPixelRatio, forceVector);
 
-            // Get a random color for the force vector
-            Color color = Color.rgb(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255));
-
-            drawVector(pixelForceVector, color);
+            renderArrow(visualVector.getArrowController(), pixelForceVector);
         }
 
-        // Draw the acceleration vector at a static amount of pixel length
-        if (App.calculatorController.getNetAccelerationCheckBox().isSelected()) {
-            Vector2d pixelNetForceVector = Calculator.convertToPixelLength(newtonPixelRatio, netForceVector);
-            Vector2d normalizedAccelerationVector = netAccelerationVector.normalize();
-
-            double pixelLengthNetForce = pixelNetForceVector.length();
-            double pixelLengthAcceleration = pixelLengthNetForce * Config.MAX_ACCELERATION_VECTOR_COVERAGE;
-
-            Vector2d pixelAccelerationVector = normalizedAccelerationVector.mul(pixelLengthAcceleration);
-
-            // TODO: replace hardcoded gray color with user-picked color (?)
-            drawVector(pixelAccelerationVector, Color.GRAY);
-        }
+        // Make net force vector arrow
+        Vector2d pixelNetForceVector = Calculator.convertToPixelLength(newtonPixelRatio, netForceVector);
+        renderArrow(netForceArrow, pixelNetForceVector);
     }
 
-    /**
-     * Draws a vector in the center of the canvas/output
-     */
-    public static void drawVector(Vector2d pixelVector, Color color) {
-        // Constants for the line coordinates
-        final double START_X = output.getLayoutX() + output.getWidth() / 2;
-        final double START_Y = output.getLayoutY() + output.getHeight() / 2;
-        final double END_X = START_X - pixelVector.x();
-        final double END_Y = START_Y - pixelVector.y();
+    public static void resetDiagram() {
+        for (Pane arrowNode : arrowNodes) {
+            output.getChildren().remove(arrowNode);
+        }
 
-        // Create the line
-        Line lineVector = new Line(START_X, START_Y, END_X, END_Y);
-        lineVector.setStroke(color);
-
-        // TODO: debug circles
-        Circle circle = new Circle(20, Color.BLUE);
-        Circle circle2 = new Circle(20, Color.RED);
-
-        circle.setLayoutX(START_X);
-        circle.setLayoutY(START_Y);
-        circle2.setLayoutX(END_X);
-        circle2.setLayoutY(END_Y);
-
-        output.getChildren().addAll(circle, circle2);
-        output.getChildren().add(lineVector);
-
-        System.out.println("Vector drawn");
+        arrowNodes.clear();
     }
 }

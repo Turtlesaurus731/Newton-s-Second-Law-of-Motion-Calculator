@@ -1,6 +1,8 @@
 package com.mycompany.newtonssecondlawmotioncalculator;
 
 import org.joml.Vector2d;
+
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -44,9 +46,14 @@ public class Calculator {
         final double HALF_SIZE  = CANVAS_SIZE_X / 2;
         final double PIXEL_LENGTH_BASE = HALF_SIZE * Config.MAX_VECTOR_COVERAGE;
 
-        Vector2d maximumForceVector = forceVectors.get(0);
+        Vector2d netForceVector = calculateNetForceVector(forceVectors);
 
-        for (Vector2d forceVector : forceVectors) {
+        List<Vector2d> totalForceVectors = new ArrayList<>(forceVectors);
+        totalForceVectors.add(netForceVector);
+
+        Vector2d maximumForceVector = totalForceVectors.get(0);
+
+        for (Vector2d forceVector : totalForceVectors) {
             if (forceVector.length() > maximumForceVector.length()) {
                 maximumForceVector = forceVector;
             }
@@ -59,9 +66,9 @@ public class Calculator {
      * Converts a force vector's coordinates from Newtons to Pixels
      * @param newtonToPixelRatio The Newton-Pixel ratio
      * @param forceVector The force vector to convert
-     * @return The force vector with its coordinates converted to pixels
+     * @return A separate copy of the force vector with its coordinates converted to pixels
      */
     public static Vector2d convertToPixelLength(double newtonToPixelRatio, Vector2d forceVector) {
-        return forceVector.mul(newtonToPixelRatio);
+        return new Vector2d(forceVector).mul(newtonToPixelRatio);
     }
 }

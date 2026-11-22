@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.shape.Polygon?>
+
+
+<Pane fx:id="arrowPane" prefWidth="120.0" xmlns="http://javafx.com/javafx/21.0.9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.newtonssecondlawmotioncalculator.Arrow">
+   <children>
+      <Line fx:id="arrowLine" endX="100.26446533203125" endY="9.99999713897705" startY="9.99999713897705" strokeWidth="5.0" />
+      <Polygon fx:id="arrowHead" points="102.5, 16.200000762939453, 102.5, 32.0, 118.00000762939453, 23.999996185302734" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
+   </children>
+</Pane>
