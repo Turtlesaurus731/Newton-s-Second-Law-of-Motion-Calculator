@@ -19,6 +19,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.event.ActionEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.util.converter.DoubleStringConverter;
 import lombok.Getter;
 import org.joml.Vector2d;
@@ -65,7 +66,11 @@ public class CalculatorController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         // Detect changes in list view and re-render diagram
         forceVectorListView.getItems().addListener((ListChangeListener<? super VisualVector>) change -> {
-            FreeBodyDiagram.render();
+            try {
+                FreeBodyDiagram.render();
+            } catch (Exception e) {
+                // Ignored;
+            }
         });
 
         // Filter user input for number fields
@@ -85,7 +90,7 @@ public class CalculatorController implements Initializable {
     }
 
     @FXML
-    private void onActionAddButton(ActionEvent actionEvent) {
+    private void onActionAddButton(ActionEvent actionEvent) throws IOException {
         String xString = xForceVectorTextField.getText();
         String yString = yForceVectorTextField.getText();
 
@@ -95,7 +100,7 @@ public class CalculatorController implements Initializable {
         String uuid = UUID.randomUUID().toString();
         Vector2d vector = new Vector2d(x, y);
 
-        VisualVector visualVector = new VisualVector(uuid, vector, VectorType.FORCE);
+        VisualVector visualVector = new VisualVector(uuid, vector, VectorType.FORCE, Color.DARKGRAY);
 
         FreeBodyLogic.getVisualVectors().put(visualVector.getUuid(), visualVector);
         FreeBodyLogic.setForceVector(uuid, visualVector.getVector());
@@ -123,10 +128,9 @@ public class CalculatorController implements Initializable {
 
     @FXML
     private void onActionResetButton(ActionEvent actionEvent) {
+        FreeBodyLogic.reset();
         forceVectorListView.getItems().clear();
-        output.getChildren().clear();
-        FreeBodyLogic.getForceVectors().clear();
-        FreeBodyLogic.getVisualVectors().clear();
+        FreeBodyDiagram.resetDiagram();
     }
 
     @FXML
