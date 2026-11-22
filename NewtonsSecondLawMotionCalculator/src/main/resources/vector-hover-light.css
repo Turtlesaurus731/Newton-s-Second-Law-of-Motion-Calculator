@@ -1,0 +1,19 @@
+.root {
+    -fx-background-color: #f4f6fa;
+    -fx-background-radius: 14px;
+    -fx-border-color: #c5ccd8;
+    -fx-border-width: 3px;
+    -fx-border-radius: 14px;
+}
+
+.info-box {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 10px;
+    -fx-border-color: #d2d7e2;
+    -fx-border-width: 2px;
+    -fx-border-radius: 10px;
+}
+
+.label {
+    -fx-text-fill: #1b2234;
+}
