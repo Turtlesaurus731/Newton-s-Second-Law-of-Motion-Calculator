@@ -57,4 +57,15 @@ public class FreeBodyLogic {
             netAccelerationVector = Calculator.calculateNetAccelerationVector(netForceVector, mass);
         }
     }
+
+    /**
+     * Resets all the FreeBodyLogic's vakues back to default
+     */
+    public static void reset() {
+        forceVectors.clear();
+        visualVectors.clear();
+        netForceVector = null;
+        netAccelerationVector = null;
+        newtonPixelRatio = 0;
+    }
 }
