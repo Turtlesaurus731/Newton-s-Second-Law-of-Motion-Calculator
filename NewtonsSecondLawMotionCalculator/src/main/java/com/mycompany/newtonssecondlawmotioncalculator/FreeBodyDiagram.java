@@ -19,7 +19,7 @@ import java.util.UUID;
 public class FreeBodyDiagram {
 
     private static Pane output;
-    private static ObservableList<Pane> arrowNodes = FXCollections.observableList(new ArrayList<>());
+    public static ObservableList<Pane> arrowNodes = FXCollections.observableList(new ArrayList<>());
 
     private static Arrow netAccelerationArrow;
     private static Arrow netForceArrow;
@@ -94,6 +94,13 @@ public class FreeBodyDiagram {
         // Make net force vector arrow
         Vector2d pixelNetForceVector = Calculator.convertToPixelLength(newtonPixelRatio, netForceVector);
         renderArrow(netForceArrow, pixelNetForceVector);
+
+        // Make acceleration vector arrow
+        Vector2d unitVector = pixelNetForceVector.normalize();
+        Vector2d pixelNetAcceleration = unitVector.mul(200);
+        if (CalculatorController.isSelected) {
+            renderArrow(netAccelerationArrow, pixelNetAcceleration);
+        }
     }
 
     public static void resetDiagram() {
