@@ -50,7 +50,7 @@ public class FreeBodyLogic {
         List<Vector2d> forceVectorsList = new ArrayList<>(forceVectors.values());
 
         netForceVector = Calculator.calculateNetForceVector(forceVectorsList);
-        newtonPixelRatio = Calculator.calculateNewtonToPixelRatio(forceVectorsList);
+        newtonPixelRatio = Calculator.calculateNewtonToPixelRatio(getTotalForceVectors());
 
         if (mass > 0) {
             netAccelerationVector = Calculator.calculateNetAccelerationVector(netForceVector, mass);

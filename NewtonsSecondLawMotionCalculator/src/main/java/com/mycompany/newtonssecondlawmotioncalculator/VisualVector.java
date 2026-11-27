@@ -1,11 +1,17 @@
 package com.mycompany.newtonssecondlawmotioncalculator;
 
+import javafx.animation.Interpolator;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Cursor;
+import javafx.scene.control.ListView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -13,6 +19,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
+import javafx.scene.transform.Scale;
+import javafx.util.Duration;
 import lombok.Getter;
 import lombok.Setter;
 import org.joml.Vector2d;
@@ -33,6 +41,9 @@ public class VisualVector {
     private Color color;
     private BooleanProperty hovering = new SimpleBooleanProperty(false);
     private VBox infoBox = null;
+    @Setter private int order;
+    private Timeline hoverPulseAnimation;
+    private final Scale arrowHeadScale = new Scale(1, 1);
 
     public VisualVector(String uuid, Vector2d vector, VectorType vectorType, Color color) throws IOException {
         this.uuid = uuid;
@@ -68,6 +79,8 @@ public class VisualVector {
         this.arrowLine = arrowController.getArrowLine();
         this.arrowHead = arrowController.getArrowHead();
 
+        arrowRoot.setCursor(Cursor.HAND);
+
         // Arrow root mouse events only trigger for arrow line and head
         arrowRoot.setPickOnBounds(false);
     }
@@ -76,9 +89,19 @@ public class VisualVector {
      * Initializes the hovering system for the vector
      */
     public void initializeHovering() {
+        // Initialize handlers
         arrowRoot.setOnMouseEntered(this::handleOnMouseEnter);
         arrowRoot.setOnMouseExited(this::handleOnMouseExit);
         arrowRoot.setOnMouseMoved(this::updateInfoPosition);
+        arrowRoot.setOnMouseClicked(this::selectVector);
+
+        // Initialize hover animation
+        hoverPulseAnimation = new Timeline(new KeyFrame(Duration.millis(650),
+                new KeyValue(arrowLine.strokeWidthProperty(), 8.0, Interpolator.EASE_BOTH),
+                new KeyValue(arrowHeadScale.xProperty(), 1.35, Interpolator.EASE_BOTH),
+                new KeyValue(arrowHeadScale.yProperty(), 1.35, Interpolator.EASE_BOTH)));
+        hoverPulseAnimation.setCycleCount(Timeline.INDEFINITE);
+        hoverPulseAnimation.setAutoReverse(true);
     }
 
     /**
@@ -135,6 +158,15 @@ public class VisualVector {
 
             infoBox.autosize();
 
+            // Pulse animation start
+            arrowLine.setStrokeWidth(5.0);
+            arrowHeadScale.setX(1);
+            arrowHeadScale.setY(1);
+            arrowHeadScale.setPivotX(arrowLine.getEndX());
+            arrowHeadScale.setPivotY(arrowLine.getEndY());
+            arrowHead.getTransforms().setAll(arrowHeadScale);
+            hoverPulseAnimation.playFromStart();
+
             updateInfoPosition(event);
         } catch (Exception e) {
             e.printStackTrace();
@@ -162,6 +194,13 @@ public class VisualVector {
 
         FreeBodyDiagram.renderArrow(componentX);
         FreeBodyDiagram.renderArrow(componentY);
+
+        // Pulse animation stop
+        hoverPulseAnimation.stop();
+        arrowLine.setStrokeWidth(5.0);
+        arrowHeadScale.setX(1);
+        arrowHeadScale.setY(1);
+        arrowHead.getTransforms().remove(arrowHeadScale);
     }
 
     /**
@@ -180,6 +219,21 @@ public class VisualVector {
 
         infoBox.setLayoutX(mousePosX - boundsX / 2);
         infoBox.setLayoutY(mousePosY - boundsY + 35);
+    }
+
+    /**
+     * Selects the vector in the list view after being clicked
+     * @param event The mouse event
+     */
+    private void selectVector(MouseEvent event) {
+        ListView<VisualVector> forceVectorListView = App.getCalculatorController().getForceVectorListView();
+
+        // Select or deselect depending on if hte vector is already chosen in the list view
+        if (order == forceVectorListView.getSelectionModel().getSelectedIndex()) {
+            forceVectorListView.getSelectionModel().select(null);
+        } else if (order < forceVectorListView.getItems().size() && order >= 0) {
+            forceVectorListView.getSelectionModel().select(order);
+        }
     }
 
     /**
