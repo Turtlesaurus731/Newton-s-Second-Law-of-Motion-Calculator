@@ -26,6 +26,7 @@ public class App extends Application {
         FreeBodyDiagram.initialize();
 
         scene = new Scene(root);
+        stage.setTitle("Force Vector Calculator");
         stage.setScene(scene);
         stage.show();
     }
