@@ -48,7 +48,15 @@ public class FreeBodyDiagram {
         List<Vector2d> forceVectors = FreeBodyLogic.getTotalForceVectors();
         newtonPixelRatio = Calculator.calculateNewtonToPixelRatio(forceVectors);
 
+        if (newtonPixelRatio <= 0 || (visualVector.getVectorType() == VectorType.NET_ACCELERATION && FreeBodyLogic.getMass() <= 0)) {
+            output.getChildren().remove(visualVector.getArrowRoot());
+            return;
+        }
+
         Vector2d pixelVector = Calculator.convertToPixelLength(newtonPixelRatio, visualVector.getVector());
+        if (visualVector.getVectorType() == VectorType.NET_ACCELERATION) {
+            pixelVector.mul(FreeBodyLogic.getMass() * Config.RENDERED_ACCELERATION_VECTOR_RATIO);
+        }
 
         if (pixelVector.length() <= 0) {
             output.getChildren().remove(visualVector.getArrowRoot());
@@ -94,27 +102,32 @@ public class FreeBodyDiagram {
                 continue;
             }
 
-            Vector2d forceVector = visualVector.getVector();
-            Vector2d pixelForceVector = Calculator.convertToPixelLength(newtonPixelRatio, forceVector);
-
             renderArrow(visualVector);
         }
 
-        // Update net force & net acceleration visual vectors with new physics vectors
-        netForceVisualVector.setVector(netForceVector);
-        netAccelerationVisualVector.setVector(netAccelerationVector);
+        // Sync net force & net acceleration visual vectors with FreeBodyLogic
+        updateNetVectors();
 
         // Render net force visual vector
         Vector2d pixelNetForceVector = Calculator.convertToPixelLength(newtonPixelRatio, netForceVector);
         renderArrow(netForceVisualVector);
 
         // Render net acceleration visual vector
-        Vector2d pixelNetAccelerationVector = null;
-
         if (CalculatorController.netAccelerationIsSelected) {
-            pixelNetAccelerationVector = new Vector2d(pixelNetForceVector).mul(Config.RENDERED_ACCELERATION_VECTOR_RATIO);
             renderArrow(netAccelerationVisualVector);
         }
+    }
+
+    /**
+     * Updates and syncs the inner physics vectors of netForceVisualVector and netAccelerationVisualVector
+     * with FreeBodyLogic's current netForceVector and netAccelerationVector.
+     */
+    public static void updateNetVectors() {
+        Vector2d netForce = FreeBodyLogic.getNetForceVector();
+        Vector2d netAccel = FreeBodyLogic.getNetAccelerationVector();
+
+        netForceVisualVector.setVector(netForce != null ? netForce : new Vector2d());
+        netAccelerationVisualVector.setVector(netAccel != null ? netAccel : new Vector2d());
     }
 
     public static void resetDiagram() {
@@ -123,5 +136,6 @@ public class FreeBodyDiagram {
         }
 
         arrowNodes.clear();
+        updateNetVectors();
     }
 }
