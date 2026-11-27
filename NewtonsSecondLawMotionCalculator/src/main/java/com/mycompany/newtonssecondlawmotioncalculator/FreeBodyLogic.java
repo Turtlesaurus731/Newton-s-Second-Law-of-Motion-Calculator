@@ -51,10 +51,11 @@ public class FreeBodyLogic {
 
         netForceVector = Calculator.calculateNetForceVector(forceVectorsList);
         newtonPixelRatio = Calculator.calculateNewtonToPixelRatio(getTotalForceVectors());
+        netAccelerationVector = (mass > 0)
+                ? Calculator.calculateNetAccelerationVector(netForceVector, mass)
+                : null;
 
-        if (mass > 0) {
-            netAccelerationVector = Calculator.calculateNetAccelerationVector(netForceVector, mass);
-        }
+        FreeBodyDiagram.updateNetVectors();
     }
 
     /**
@@ -63,10 +64,11 @@ public class FreeBodyLogic {
      */
     public static void setMass(double massToCalculate) {
         mass = (massToCalculate > 0) ? massToCalculate : 0;
+        netAccelerationVector = (mass > 0 && netForceVector != null)
+                ? Calculator.calculateNetAccelerationVector(netForceVector, mass)
+                : null;
 
-        if (mass > 0) {
-            netAccelerationVector = Calculator.calculateNetAccelerationVector(netForceVector, mass);
-        }
+        FreeBodyDiagram.updateNetVectors();
     }
 
     /**
@@ -78,5 +80,6 @@ public class FreeBodyLogic {
         netForceVector = null;
         netAccelerationVector = null;
         newtonPixelRatio = 0;
+        FreeBodyDiagram.updateNetVectors();
     }
 }

@@ -88,7 +88,7 @@ public class CalculatorController implements Initializable {
         }
 
         // Filter user input for number fields
-        UnaryOperator<TextFormatter.Change> numberFilter = change -> {
+        UnaryOperator<TextFormatter.Change> vectorFilter = change -> {
             String newText = change.getControlNewText();
             
             if (newText.matches("-?\\d*\\.?\\d*")) {
@@ -98,10 +98,40 @@ public class CalculatorController implements Initializable {
             return null;
         };
 
-        xForceVectorTextField.setTextFormatter(new TextFormatter<Double>(new DoubleStringConverter(), null, numberFilter));
-        yForceVectorTextField.setTextFormatter(new TextFormatter<Double>(new DoubleStringConverter(), null, numberFilter));
-        massTextField.setTextFormatter(new TextFormatter<Double>(new DoubleStringConverter(), null, numberFilter));
+        UnaryOperator<TextFormatter.Change> massFilter = change -> {
+            String newText = change.getControlNewText();
 
+            if (newText.matches("\\d*\\.?\\d*")) {
+                return change;
+            }
+
+            return null;
+        };
+
+        xForceVectorTextField.setTextFormatter(new TextFormatter<Double>(new DoubleStringConverter(), null, vectorFilter));
+        yForceVectorTextField.setTextFormatter(new TextFormatter<Double>(new DoubleStringConverter(), null, vectorFilter));
+        massTextField.setTextFormatter(new TextFormatter<Double>(new DoubleStringConverter(), null, massFilter));
+
+        // Update mass value only when text is a valid double
+        massTextField.textProperty().addListener((obs, oldText, newText) -> {
+            if (newText == null || newText.isBlank()) {
+                return;
+            }
+
+            try {
+                double mass = Double.parseDouble(newText);
+                if (Double.isFinite(mass)) {
+                    FreeBodyLogic.setMass(mass);
+                    if (netAccelerationIsSelected) {
+                        FreeBodyDiagram.render();
+                    }
+                }
+            } catch (NumberFormatException | IOException ignored) {
+                // Ignore incomplete input such as "." or render error
+            }
+        });
+
+        // Update net acceleration selected
         netAccelerationCheckBox.selectedProperty().addListener(ov->{
             netAccelerationIsSelected = netAccelerationCheckBox.isSelected();
             try {
