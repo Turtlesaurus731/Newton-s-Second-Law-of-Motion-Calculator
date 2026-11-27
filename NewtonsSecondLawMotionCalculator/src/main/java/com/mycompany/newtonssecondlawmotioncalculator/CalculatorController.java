@@ -60,13 +60,15 @@ public class CalculatorController implements Initializable {
     //Temporary before enzo fix on his end
     @FXML
     private CheckBox darkModeToggleCheckBox;
-    /**
-     * Initializes the controller class.
-     */
-    public static boolean isSelected;
+
+
+    public static boolean netAccelerationIsSelected;
 
     private VectorHoverDetailsController hoverDetailsController;
 
+    /**
+     * Initializes the controller class.
+     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // Detect changes in list view and re-render diagram
@@ -101,7 +103,7 @@ public class CalculatorController implements Initializable {
         massTextField.setTextFormatter(new TextFormatter<Double>(new DoubleStringConverter(), null, numberFilter));
 
         netAccelerationCheckBox.selectedProperty().addListener(ov->{
-            isSelected = netAccelerationCheckBox.isSelected();
+            netAccelerationIsSelected = netAccelerationCheckBox.isSelected();
             try {
                 FreeBodyDiagram.render();
             } catch (IOException e) {
@@ -123,7 +125,7 @@ public class CalculatorController implements Initializable {
         String uuid = UUID.randomUUID().toString();
         Vector2d vector = new Vector2d(x, y);
 
-        VisualVector visualVector = new VisualVector(uuid, vector, VectorType.FORCE, Color.DARKGRAY);
+        VisualVector visualVector = new VisualVector(uuid, vector, VectorType.FORCE, Color.BLACK);
 
         FreeBodyLogic.getVisualVectors().put(visualVector.getUuid(), visualVector);
         FreeBodyLogic.setForceVector(uuid, visualVector.getVector());

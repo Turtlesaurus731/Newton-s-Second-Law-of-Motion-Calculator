@@ -101,7 +101,6 @@ public class VisualVector {
      */
     private void handleOnMouseEnter(MouseEvent event) {
         hovering.set(true);
-        System.out.println("entered");
 
         try {
             // If we dont have a hover info box yet, we create it
@@ -137,8 +136,7 @@ public class VisualVector {
      */
     private void handleOnMouseExit(MouseEvent event) {
         hovering.set(false);
-        System.out.println("exited");
-        
+
         // Remove hover info box from app root
         if (infoBox != null) {
             App.getCalculatorController().getRoot().getChildren().remove(infoBox);
@@ -172,7 +170,7 @@ public class VisualVector {
             this.vector.set(newVector);
         }
     }
-    
+
     /**
      * Returns a separate copy of the stored vector in visual vector to prevent mutations
      * @return The copy of the stored vector
@@ -183,8 +181,6 @@ public class VisualVector {
 
     @Override
     public String toString() {
-        System.out.println("ran to string");
-        System.out.println(String.format("<%.1f, %.1f> %s Vector", vector.x(), vector.y(), vectorType.getName()));
         return String.format("<%.1f, %.1f> %s Vector", vector.x(), vector.y(), vectorType.getName());
     }
 }
