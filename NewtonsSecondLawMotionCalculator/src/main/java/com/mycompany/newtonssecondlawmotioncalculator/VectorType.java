@@ -1,7 +1,8 @@
 package com.mycompany.newtonssecondlawmotioncalculator;
 
 public enum VectorType {
-    ACCELERATION("Acceleration"),
+    NET_ACCELERATION("Net Acceleration"),
+    NET_FORCE("Net Force"),
     FORCE("Force");
 
     private final String name;
