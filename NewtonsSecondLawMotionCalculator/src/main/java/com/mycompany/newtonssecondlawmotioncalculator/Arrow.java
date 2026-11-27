@@ -12,6 +12,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
+import lombok.Getter;
 
 /**
  * FXML Controller class
@@ -21,11 +22,11 @@ import javafx.scene.shape.Polygon;
 public class Arrow implements Initializable {
 
     @FXML
-    private Pane arrowPane;
+    @Getter private Pane arrowPane;
     @FXML
-    private Line arrowLine;
+    @Getter private Line arrowLine;
     @FXML
-    private Polygon arrowHead;
+    @Getter private Polygon arrowHead;
 
     private double arrowHeadLength = 10;
     private double arrowHeadAngle = Math.toRadians(60);
@@ -84,9 +85,5 @@ public class Arrow implements Initializable {
     public void setArrowHeadAngle(double arrowHeadAngle) {
         this.arrowHeadAngle = arrowHeadAngle;
         updateArrowHead();
-    }
-
-    public Pane getRoot() {
-        return arrowPane;
     }
 }

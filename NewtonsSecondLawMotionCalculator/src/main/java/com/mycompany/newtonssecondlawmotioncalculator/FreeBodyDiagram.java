@@ -26,7 +26,7 @@ public class FreeBodyDiagram {
 
     public static void initialize() throws IOException {
         output = App.calculatorController.getOutput();
-
+        output.setOnMouseClicked(e -> System.out.println("Hit: " + e.getPickResult().getIntersectedNode()));
         netAccelerationArrow = loadArrow(Color.DARKRED);
         netForceArrow = loadArrow(Color.DARKBLUE);
     }
@@ -37,6 +37,7 @@ public class FreeBodyDiagram {
 
         Arrow arrowController = loader.getController();
         arrowController.setColor(color);
+        arrowController.getArrowPane().setPickOnBounds(false);
 
         return arrowController;
     }
@@ -56,7 +57,7 @@ public class FreeBodyDiagram {
                 START_Y - pixelVector.y()
         );
 
-        Pane arrowNode = arrowController.getRoot();
+        Pane arrowNode = arrowController.getArrowPane();
         arrowNodes.add(arrowNode);
         output.getChildren().add(arrowNode);
     }
