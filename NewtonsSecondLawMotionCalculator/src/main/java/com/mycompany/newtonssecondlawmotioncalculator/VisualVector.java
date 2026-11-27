@@ -18,6 +18,7 @@ import org.joml.Vector2d;
 
 import java.io.IOException;
 import java.util.UUID;
+import java.util.Vector;
 
 @Getter
 public class VisualVector {
@@ -103,10 +104,17 @@ public class VisualVector {
         hovering.set(true);
 
         try {
-            // If we dont have a hover info box yet, we create it
+            // If we don't have a hover info box yet, we create it
             if (infoBox == null) {
                 FXMLLoader hoverLoader = App.getFXMLLoader("vector_hover_details");
                 infoBox = hoverLoader.load();
+
+                VectorHoverDetailsController hoverDetailsController = hoverLoader.getController();
+                CalculatorController calculatorController = App.getCalculatorController();
+                if (calculatorController != null && hoverDetailsController != null) {
+                    calculatorController.setHoverDetailsController(hoverDetailsController);
+                    hoverDetailsController.setDarkMode(calculatorController.getDarkModeToggleCheckBox().isSelected());
+                }
 
                 // Prevents HBox from overriding layoutX/layoutY
                 infoBox.setManaged(false);
