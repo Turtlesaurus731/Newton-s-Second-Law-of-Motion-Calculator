@@ -88,7 +88,7 @@ public class CalculatorController implements Initializable {
         }
 
         // Filter user input for number fields
-        UnaryOperator<TextFormatter.Change> numberFilter = change -> {
+        UnaryOperator<TextFormatter.Change> vectorFilter = change -> {
             String newText = change.getControlNewText();
             
             if (newText.matches("-?\\d*\\.?\\d*")) {
@@ -98,10 +98,40 @@ public class CalculatorController implements Initializable {
             return null;
         };
 
-        xForceVectorTextField.setTextFormatter(new TextFormatter<Double>(new DoubleStringConverter(), null, numberFilter));
-        yForceVectorTextField.setTextFormatter(new TextFormatter<Double>(new DoubleStringConverter(), null, numberFilter));
-        massTextField.setTextFormatter(new TextFormatter<Double>(new DoubleStringConverter(), null, numberFilter));
+        UnaryOperator<TextFormatter.Change> massFilter = change -> {
+            String newText = change.getControlNewText();
 
+            if (newText.matches("\\d*\\.?\\d*")) {
+                return change;
+            }
+
+            return null;
+        };
+
+        xForceVectorTextField.setTextFormatter(new TextFormatter<Double>(new DoubleStringConverter(), null, vectorFilter));
+        yForceVectorTextField.setTextFormatter(new TextFormatter<Double>(new DoubleStringConverter(), null, vectorFilter));
+        massTextField.setTextFormatter(new TextFormatter<Double>(new DoubleStringConverter(), null, massFilter));
+
+        // Update mass value only when text is a valid double
+        massTextField.textProperty().addListener((obs, oldText, newText) -> {
+            if (newText == null || newText.isBlank()) {
+                return;
+            }
+
+            try {
+                double mass = Double.parseDouble(newText);
+                if (Double.isFinite(mass)) {
+                    FreeBodyLogic.setMass(mass);
+                    if (netAccelerationIsSelected) {
+                        FreeBodyDiagram.render();
+                    }
+                }
+            } catch (NumberFormatException | IOException ignored) {
+                // Ignore incomplete input such as "." or render error
+            }
+        });
+
+        // Update net acceleration selected
         netAccelerationCheckBox.selectedProperty().addListener(ov->{
             netAccelerationIsSelected = netAccelerationCheckBox.isSelected();
             try {
@@ -131,6 +161,7 @@ public class CalculatorController implements Initializable {
         FreeBodyLogic.setForceVector(uuid, visualVector.getVector());
 
         forceVectorListView.getItems().add(visualVector);
+        updateForceVectorOrders();
     }
 
     @FXML
@@ -149,6 +180,7 @@ public class CalculatorController implements Initializable {
 
         // Remove the visual vector from the list view (and de-render it)
         forceVectorListView.getItems().remove(selectedVisualVector);
+        updateForceVectorOrders();
     }
 
     @FXML
@@ -198,6 +230,18 @@ public class CalculatorController implements Initializable {
 //        alert.setGraphic(icon);
         alert.setContentText("temp");
         alert.showAndWait();
+    }
+
+    /**
+     * Updates the order/index of all the force visual vectors in the list view
+     */
+    private void updateForceVectorOrders() {
+        List<VisualVector> forceVectors = forceVectorListView.getItems();
+
+        for (int i = 0; i < forceVectors.size(); i++) {
+            VisualVector forceVector = forceVectors.get(i);
+            forceVector.setOrder(i);
+        }
     }
 
     public void setHoverDetailsController(VectorHoverDetailsController hoverDetailsController) {

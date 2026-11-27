@@ -25,16 +25,16 @@ public class Calculator {
      * @return The net acceleration vector in m/s^2
      */
     public static Vector2d calculateNetAccelerationVector(Vector2d netForceVector, double mass) {
-        return netForceVector.div(mass);
+        return new Vector2d(netForceVector).div(mass);
     }
 
     /**
      * Calculates the Newton-Pixel ratio for the force vector lines
-     * @param forceVectors The force vectors that will be rendered in canvas
+     * @param totalForceVectors The force vectors that will be rendered in canvas
      * @return The Newton-Pixel ratio that fits all the force vectors in the canvas
      */
-    public static double calculateNewtonToPixelRatio(List<Vector2d> forceVectors) {
-        if (forceVectors.size() <= 0) {
+    public static double calculateNewtonToPixelRatio(List<Vector2d> totalForceVectors) {
+        if (totalForceVectors == null || totalForceVectors.isEmpty()) {
             // TODO: Think of using exceptions
             System.out.println("No force vectors provided to calculate ratio");
             return -1;
@@ -46,20 +46,20 @@ public class Calculator {
         final double HALF_SIZE  = CANVAS_SIZE_X / 2;
         final double PIXEL_LENGTH_BASE = HALF_SIZE * Config.MAX_VECTOR_COVERAGE;
 
-        Vector2d netForceVector = calculateNetForceVector(forceVectors);
-
-        List<Vector2d> totalForceVectors = new ArrayList<>(forceVectors);
-        totalForceVectors.add(netForceVector);
-
-        Vector2d maximumForceVector = totalForceVectors.get(0);
+        double maxLength = 0;
 
         for (Vector2d forceVector : totalForceVectors) {
-            if (forceVector.length() > maximumForceVector.length()) {
-                maximumForceVector = forceVector;
+            if (forceVector != null && forceVector.length() > maxLength) {
+                maxLength = forceVector.length();
             }
         }
 
-        return PIXEL_LENGTH_BASE / maximumForceVector.length();
+        // Invalid ratio
+        if (maxLength <= 0) {
+            return -1;
+        }
+
+        return PIXEL_LENGTH_BASE / maxLength;
     }
 
     /**

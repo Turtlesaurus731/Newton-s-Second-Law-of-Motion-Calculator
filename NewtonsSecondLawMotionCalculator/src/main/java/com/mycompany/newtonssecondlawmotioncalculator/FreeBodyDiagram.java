@@ -8,6 +8,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
+import lombok.Getter;
 import org.joml.Random;
 import org.joml.Vector2d;
 
@@ -17,33 +18,48 @@ import java.util.List;
 import java.util.UUID;
 
 public class FreeBodyDiagram {
-
     private static Pane output;
     public static ObservableList<Pane> arrowNodes = FXCollections.observableList(new ArrayList<>());
+
+    @Getter private static double newtonPixelRatio;
 
     private static VisualVector netAccelerationVisualVector;
     private static VisualVector netForceVisualVector;
 
+    @Getter private static VisualVector componentVectorX;
+    @Getter private static VisualVector componentVectorY;
+
     public static void initialize() throws IOException {
         output = App.calculatorController.getOutput();
 
-        netAccelerationVisualVector = new VisualVector(VectorType.NET_ACCELERATION, Color.RED);
-        netForceVisualVector = new VisualVector(VectorType.NET_FORCE, Color.BLUE);
+        netAccelerationVisualVector = new VisualVector(VectorType.NET_ACCELERATION, Color.ORANGE);
+        netForceVisualVector = new VisualVector(VectorType.NET_FORCE, Color.GREEN);
+
+        componentVectorX = new VisualVector(VectorType.FORCE, Color.RED);
+        componentVectorY = new VisualVector(VectorType.FORCE, Color.BLUE);
+
+        componentVectorX.getArrowRoot().setOpacity(0.5);
+        componentVectorY.getArrowRoot().setOpacity(0.5);
+        componentVectorX.getArrowRoot().setMouseTransparent(true);
+        componentVectorY.getArrowRoot().setMouseTransparent(true);
     }
 
-    private static Arrow loadArrow(Color color) throws IOException {
-        FXMLLoader loader = App.getFXMLLoader("arrow");
-        loader.load();
+    public static void renderArrow(VisualVector visualVector) {
+        List<Vector2d> forceVectors = FreeBodyLogic.getTotalForceVectors();
+        newtonPixelRatio = Calculator.calculateNewtonToPixelRatio(forceVectors);
 
-        Arrow arrowController = loader.getController();
-        arrowController.setColor(color);
-        arrowController.getArrowPane().setPickOnBounds(false);
+        if (newtonPixelRatio <= 0 || (visualVector.getVectorType() == VectorType.NET_ACCELERATION && FreeBodyLogic.getMass() <= 0)) {
+            output.getChildren().remove(visualVector.getArrowRoot());
+            return;
+        }
 
-        return arrowController;
-    }
+        Vector2d pixelVector = Calculator.convertToPixelLength(newtonPixelRatio, visualVector.getVector());
+        if (visualVector.getVectorType() == VectorType.NET_ACCELERATION) {
+            pixelVector.mul(FreeBodyLogic.getMass() * Config.RENDERED_ACCELERATION_VECTOR_RATIO);
+        }
 
-    private static void renderArrow(VisualVector visualVector, Vector2d pixelVector) {
-        if (pixelVector == null) {
+        if (pixelVector.length() <= 0) {
+            output.getChildren().remove(visualVector.getArrowRoot());
             return;
         }
 
@@ -86,27 +102,32 @@ public class FreeBodyDiagram {
                 continue;
             }
 
-            Vector2d forceVector = visualVector.getVector();
-            Vector2d pixelForceVector = Calculator.convertToPixelLength(newtonPixelRatio, forceVector);
-
-            renderArrow(visualVector, pixelForceVector);
+            renderArrow(visualVector);
         }
 
-        // Update net force & net acceleration visual vectors with new physics vectors
-        netForceVisualVector.setVector(netForceVector);
-        netAccelerationVisualVector.setVector(netAccelerationVector);
+        // Sync net force & net acceleration visual vectors with FreeBodyLogic
+        updateNetVectors();
 
         // Render net force visual vector
         Vector2d pixelNetForceVector = Calculator.convertToPixelLength(newtonPixelRatio, netForceVector);
-        renderArrow(netForceVisualVector, pixelNetForceVector);
+        renderArrow(netForceVisualVector);
 
         // Render net acceleration visual vector
-        Vector2d pixelNetAccelerationVector = null;
-
         if (CalculatorController.netAccelerationIsSelected) {
-            pixelNetAccelerationVector = new Vector2d(pixelNetForceVector).mul(Config.RENDERED_ACCELERATION_VECTOR_RATIO);
-            renderArrow(netAccelerationVisualVector, pixelNetAccelerationVector);
+            renderArrow(netAccelerationVisualVector);
         }
+    }
+
+    /**
+     * Updates and syncs the inner physics vectors of netForceVisualVector and netAccelerationVisualVector
+     * with FreeBodyLogic's current netForceVector and netAccelerationVector.
+     */
+    public static void updateNetVectors() {
+        Vector2d netForce = FreeBodyLogic.getNetForceVector();
+        Vector2d netAccel = FreeBodyLogic.getNetAccelerationVector();
+
+        netForceVisualVector.setVector(netForce != null ? netForce : new Vector2d());
+        netAccelerationVisualVector.setVector(netAccel != null ? netAccel : new Vector2d());
     }
 
     public static void resetDiagram() {
@@ -115,5 +136,6 @@ public class FreeBodyDiagram {
         }
 
         arrowNodes.clear();
+        updateNetVectors();
     }
 }

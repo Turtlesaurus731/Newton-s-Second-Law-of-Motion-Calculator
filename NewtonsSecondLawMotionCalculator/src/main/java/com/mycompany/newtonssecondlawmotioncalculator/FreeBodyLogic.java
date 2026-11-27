@@ -14,6 +14,17 @@ public class FreeBodyLogic {
     @Getter private static double newtonPixelRatio;
 
     /**
+     * Returns all the force vectors including net force,
+     * used for the computation of the newton-pixel ratio.
+     * @return The list containing all the force vectors inlcuding the net force
+     */
+    public static List<Vector2d> getTotalForceVectors() {
+        List<Vector2d> totalForceVectors = new ArrayList<>(getForceVectors().values());
+        totalForceVectors.add(netForceVector);
+        return totalForceVectors;
+    }
+
+    /**
      * Sets the force vector and updates net force vector & net acceleration vector where possible
      * @param uuid The UUID of the force vector
      * @param forceVector The force vector to add
@@ -39,11 +50,12 @@ public class FreeBodyLogic {
         List<Vector2d> forceVectorsList = new ArrayList<>(forceVectors.values());
 
         netForceVector = Calculator.calculateNetForceVector(forceVectorsList);
-        newtonPixelRatio = Calculator.calculateNewtonToPixelRatio(forceVectorsList);
+        newtonPixelRatio = Calculator.calculateNewtonToPixelRatio(getTotalForceVectors());
+        netAccelerationVector = (mass > 0)
+                ? Calculator.calculateNetAccelerationVector(netForceVector, mass)
+                : null;
 
-        if (mass > 0) {
-            netAccelerationVector = Calculator.calculateNetAccelerationVector(netForceVector, mass);
-        }
+        FreeBodyDiagram.updateNetVectors();
     }
 
     /**
@@ -52,10 +64,11 @@ public class FreeBodyLogic {
      */
     public static void setMass(double massToCalculate) {
         mass = (massToCalculate > 0) ? massToCalculate : 0;
+        netAccelerationVector = (mass > 0 && netForceVector != null)
+                ? Calculator.calculateNetAccelerationVector(netForceVector, mass)
+                : null;
 
-        if (mass > 0) {
-            netAccelerationVector = Calculator.calculateNetAccelerationVector(netForceVector, mass);
-        }
+        FreeBodyDiagram.updateNetVectors();
     }
 
     /**
@@ -67,5 +80,6 @@ public class FreeBodyLogic {
         netForceVector = null;
         netAccelerationVector = null;
         newtonPixelRatio = 0;
+        FreeBodyDiagram.updateNetVectors();
     }
 }
