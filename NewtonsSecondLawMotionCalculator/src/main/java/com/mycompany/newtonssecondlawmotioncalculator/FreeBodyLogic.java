@@ -14,6 +14,17 @@ public class FreeBodyLogic {
     @Getter private static double newtonPixelRatio;
 
     /**
+     * Returns all the force vectors including net force,
+     * used for the computation of the newton-pixel ratio.
+     * @return The list containing all the force vectors inlcuding the net force
+     */
+    public static List<Vector2d> getTotalForceVectors() {
+        List<Vector2d> totalForceVectors = new ArrayList<>(getForceVectors().values());
+        totalForceVectors.add(netForceVector);
+        return totalForceVectors;
+    }
+
+    /**
      * Sets the force vector and updates net force vector & net acceleration vector where possible
      * @param uuid The UUID of the force vector
      * @param forceVector The force vector to add

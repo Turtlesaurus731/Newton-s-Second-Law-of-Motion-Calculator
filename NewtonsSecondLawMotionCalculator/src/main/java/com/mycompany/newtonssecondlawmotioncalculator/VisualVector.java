@@ -14,6 +14,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
 import lombok.Getter;
+import lombok.Setter;
 import org.joml.Vector2d;
 
 import java.io.IOException;
@@ -23,7 +24,7 @@ import java.util.UUID;
 public class VisualVector {
     private String uuid;
     private final Vector2d vector;
-    private VectorType vectorType;
+    @Setter private VectorType vectorType;
     private FXMLLoader arrowLoader;
     private Arrow arrowController;
     private Pane arrowRoot;
@@ -122,6 +123,16 @@ public class VisualVector {
                 calculatorRoot.getChildren().add(infoBox);
             }
 
+            // Sets the component vectors
+            VisualVector componentX = FreeBodyDiagram.getComponentVectorX();
+            VisualVector componentY = FreeBodyDiagram.getComponentVectorY();
+
+            componentX.setVector(new Vector2d(vector.x(), 0));
+            componentY.setVector(new Vector2d(0, vector.y()));
+
+            FreeBodyDiagram.renderArrow(componentX);
+            FreeBodyDiagram.renderArrow(componentY);
+
             infoBox.autosize();
 
             updateInfoPosition(event);
@@ -141,6 +152,16 @@ public class VisualVector {
         if (infoBox != null) {
             App.getCalculatorController().getRoot().getChildren().remove(infoBox);
         }
+
+        // Hide the component vectors
+        VisualVector componentX = FreeBodyDiagram.getComponentVectorX();
+        VisualVector componentY = FreeBodyDiagram.getComponentVectorY();
+
+        componentX.setVector(new Vector2d());
+        componentY.setVector(new Vector2d());
+
+        FreeBodyDiagram.renderArrow(componentX);
+        FreeBodyDiagram.renderArrow(componentY);
     }
 
     /**
