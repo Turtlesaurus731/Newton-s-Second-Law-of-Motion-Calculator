@@ -24,6 +24,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Shape;
 import javafx.util.converter.DoubleStringConverter;
 import lombok.Getter;
+import lombok.Setter;
 import org.joml.Vector2d;
 
 /**
@@ -59,11 +60,12 @@ public class CalculatorController implements Initializable {
 
     //Temporary before enzo fix on his end
     @FXML
-    private CheckBox darkModeToggleCheckBox;
+    @Getter private CheckBox darkModeToggleCheckBox;
 
 
     public static boolean netAccelerationIsSelected;
 
+    @Setter
     private VectorHoverDetailsController hoverDetailsController;
 
     /**
@@ -168,11 +170,9 @@ public class CalculatorController implements Initializable {
         if (darkModeToggleCheckBox.isSelected()) {
             if (!root.getStylesheets().contains(getClass().getResource("/dark-theme.css").toExternalForm())) {
                 root.getStylesheets().add(getClass().getResource("/dark-theme.css").toExternalForm());
-                hoverDetailsController.setDarkMode(true);
             }
         } else {
             root.getStylesheets().remove(getClass().getResource("/dark-theme.css").toExternalForm());
-            hoverDetailsController.setDarkMode(false);
         }
         if (hoverDetailsController != null) {
             hoverDetailsController.setDarkMode(darkModeToggleCheckBox.isSelected());
@@ -198,12 +198,5 @@ public class CalculatorController implements Initializable {
 //        alert.setGraphic(icon);
         alert.setContentText("temp");
         alert.showAndWait();
-    }
-
-    public void setHoverDetailsController(VectorHoverDetailsController hoverDetailsController) {
-        this.hoverDetailsController = hoverDetailsController;
-        if (this.hoverDetailsController != null && darkModeToggleCheckBox != null) {
-            this.hoverDetailsController.setDarkMode(darkModeToggleCheckBox.isSelected());
-        }
     }
 }
