@@ -12,6 +12,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
 import javafx.scene.control.ListView;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -150,6 +151,9 @@ public class VisualVector {
             VisualVector componentX = FreeBodyDiagram.getComponentVectorX();
             VisualVector componentY = FreeBodyDiagram.getComponentVectorY();
 
+            componentX.setVectorType(vectorType);
+            componentY.setVectorType(vectorType);
+
             componentX.setVector(new Vector2d(vector.x(), 0));
             componentY.setVector(new Vector2d(0, vector.y()));
 
@@ -158,7 +162,7 @@ public class VisualVector {
 
             infoBox.autosize();
 
-            // Pulse animation start
+            // Pulse animation start & shadow effect
             arrowLine.setStrokeWidth(5.0);
             arrowHeadScale.setX(1);
             arrowHeadScale.setY(1);
@@ -166,6 +170,8 @@ public class VisualVector {
             arrowHeadScale.setPivotY(arrowLine.getEndY());
             arrowHead.getTransforms().setAll(arrowHeadScale);
             hoverPulseAnimation.playFromStart();
+
+            arrowRoot.setEffect(new DropShadow(12, Color.BLACK));
 
             updateInfoPosition(event);
         } catch (Exception e) {
@@ -201,6 +207,8 @@ public class VisualVector {
         arrowHeadScale.setX(1);
         arrowHeadScale.setY(1);
         arrowHead.getTransforms().remove(arrowHeadScale);
+
+        arrowRoot.setEffect(null);
     }
 
     /**
