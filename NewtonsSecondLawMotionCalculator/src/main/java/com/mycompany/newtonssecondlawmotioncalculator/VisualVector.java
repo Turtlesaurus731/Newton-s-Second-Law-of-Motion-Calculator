@@ -41,6 +41,7 @@ public class VisualVector {
         this.arrowLoader = App.getFXMLLoader("arrow");
         arrowLoader.load();
         this.arrowController = arrowLoader.getController();
+        arrowController.setColor(color);
 
         this.arrowRoot = arrowLoader.getRoot();
         this.arrowLine = arrowController.getArrowLine();
@@ -52,18 +53,44 @@ public class VisualVector {
         initializeHovering();
     }
 
+    /**
+     * Updates stored vector physics coordinates (used by net force & net acceleration on re-render).
+     * @param newVector The new vector physics coordinates
+     */
+    public void setVector(Vector2d newVector) {
+        if (newVector != null) {
+            this.vector.set(newVector);
+        }
+    }
+
+    /**
+     * Renders the arrow for the visual vector
+     * @param originX The starting point X
+     * @param originY The starting point Y
+     * @param endX The end point X
+     * @param endY The end point Y
+     * @return The root of the arrow created
+     * @throws IOException
+     */
     public Pane render(double originX, double originY, double endX, double endY) throws IOException {
         arrowController.setPoints(originX, endX, originY, endY);
         arrowController.setColor(color);
         return arrowRoot;
     }
 
+    /**
+     * Initializes the hovering system for the vector
+     */
     public void initializeHovering() {
         arrowRoot.setOnMouseEntered(this::handleOnMouseEnter);
         arrowRoot.setOnMouseExited(this::handleOnMouseExit);
         arrowRoot.setOnMouseMoved(this::updateInfoPosition);
     }
 
+    /**
+     * Handles a mouse enter event for the arrow root
+     * @param event The mouse event
+     */
     private void handleOnMouseEnter(MouseEvent event) {
         hovering.set(true);
         System.out.println("entered");
@@ -96,6 +123,10 @@ public class VisualVector {
         }
     }
 
+    /**
+     * Handles a mouse exit event for the arrow root
+     * @param event The mouse event
+     */
     private void handleOnMouseExit(MouseEvent event) {
         hovering.set(false);
         System.out.println("exited");
@@ -105,7 +136,11 @@ public class VisualVector {
             App.getCalculatorController().getRoot().getChildren().remove(infoBox);
         }
     }
-    
+
+    /**
+     * Updates the position of the info box upon mouse move or mouse enter
+     * @param event The mouse event
+     */
     private void updateInfoPosition(MouseEvent event) {
         if (!hovering.get() || infoBox == null) {
             return;
@@ -133,33 +168,5 @@ public class VisualVector {
         System.out.println("ran to string");
         System.out.println(String.format("<%.1f, %.1f> %s Vector", vector.x(), vector.y(), vectorType.getName()));
         return String.format("<%.1f, %.1f> %s Vector", vector.x(), vector.y(), vectorType.getName());
-    }
-
-    private class HoverEnterHandler implements EventHandler<MouseEvent> {
-        @Override
-        public void handle(MouseEvent event) {
-            hovering.set(true);
-            System.out.println("enterd");
-            FXMLLoader hoverLoader = App.getFXMLLoader("vector_hover_details");
-
-            try {
-                infoBox = hoverLoader.load();
-
-                HBox calculatorRoot = App.getCalculatorController().getRoot();
-                calculatorRoot.getChildren().add(infoBox);
-            } catch (Exception e) {
-                // Ignored
-            }
-        }
-    }
-
-    private class HoverExitHandler implements EventHandler<MouseEvent> {
-        @Override
-        public void handle(MouseEvent event) {
-            hovering.set(false);
-            System.out.println("exited");
-            HBox calculatorRoot = App.getCalculatorController().getRoot();
-            calculatorRoot.getChildren().remove(infoBox);
-        }
     }
 }
