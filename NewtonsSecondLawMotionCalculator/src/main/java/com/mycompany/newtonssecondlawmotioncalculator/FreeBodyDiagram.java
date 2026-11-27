@@ -56,7 +56,7 @@ public class FreeBodyDiagram {
                 START_Y - pixelVector.y()
         );
 
-        Pane arrowNode = arrowController.getRoot();
+        Pane arrowNode = arrowController.getArrowPane();
         arrowNodes.add(arrowNode);
         output.getChildren().add(arrowNode);
     }
