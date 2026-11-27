@@ -37,6 +37,11 @@ public class FreeBodyDiagram {
 
         componentVectorX = new VisualVector(VectorType.FORCE, Color.RED);
         componentVectorY = new VisualVector(VectorType.FORCE, Color.BLUE);
+
+        componentVectorX.getArrowRoot().setOpacity(0.5);
+        componentVectorY.getArrowRoot().setOpacity(0.5);
+        componentVectorX.getArrowRoot().setMouseTransparent(true);
+        componentVectorY.getArrowRoot().setMouseTransparent(true);
     }
 
     public static void renderArrow(VisualVector visualVector) {

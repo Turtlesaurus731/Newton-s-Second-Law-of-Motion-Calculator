@@ -30,11 +30,11 @@ public class Calculator {
 
     /**
      * Calculates the Newton-Pixel ratio for the force vector lines
-     * @param forceVectors The force vectors that will be rendered in canvas
+     * @param totalForceVectors The force vectors that will be rendered in canvas
      * @return The Newton-Pixel ratio that fits all the force vectors in the canvas
      */
-    public static double calculateNewtonToPixelRatio(List<Vector2d> forceVectors) {
-        if (forceVectors.size() <= 0) {
+    public static double calculateNewtonToPixelRatio(List<Vector2d> totalForceVectors) {
+        if (totalForceVectors.size() <= 0) {
             // TODO: Think of using exceptions
             System.out.println("No force vectors provided to calculate ratio");
             return -1;
@@ -45,11 +45,6 @@ public class Calculator {
         final double CANVAS_SIZE_X = calculatorController.getOutput().getWidth();
         final double HALF_SIZE  = CANVAS_SIZE_X / 2;
         final double PIXEL_LENGTH_BASE = HALF_SIZE * Config.MAX_VECTOR_COVERAGE;
-
-        Vector2d netForceVector = calculateNetForceVector(forceVectors);
-
-        List<Vector2d> totalForceVectors = new ArrayList<>(forceVectors);
-        totalForceVectors.add(netForceVector);
 
         Vector2d maximumForceVector = totalForceVectors.get(0);
 

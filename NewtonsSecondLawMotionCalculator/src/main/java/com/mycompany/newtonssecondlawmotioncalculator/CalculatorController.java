@@ -131,6 +131,7 @@ public class CalculatorController implements Initializable {
         FreeBodyLogic.setForceVector(uuid, visualVector.getVector());
 
         forceVectorListView.getItems().add(visualVector);
+        updateForceVectorOrders();
     }
 
     @FXML
@@ -149,6 +150,7 @@ public class CalculatorController implements Initializable {
 
         // Remove the visual vector from the list view (and de-render it)
         forceVectorListView.getItems().remove(selectedVisualVector);
+        updateForceVectorOrders();
     }
 
     @FXML
@@ -198,6 +200,18 @@ public class CalculatorController implements Initializable {
 //        alert.setGraphic(icon);
         alert.setContentText("temp");
         alert.showAndWait();
+    }
+
+    /**
+     * Updates the order/index of all the force visual vectors in the list view
+     */
+    private void updateForceVectorOrders() {
+        List<VisualVector> forceVectors = forceVectorListView.getItems();
+
+        for (int i = 0; i < forceVectors.size(); i++) {
+            VisualVector forceVector = forceVectors.get(i);
+            forceVector.setOrder(i);
+        }
     }
 
     public void setHoverDetailsController(VectorHoverDetailsController hoverDetailsController) {
