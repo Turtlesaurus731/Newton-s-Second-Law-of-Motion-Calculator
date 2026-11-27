@@ -17,6 +17,7 @@ import lombok.Getter;
 import org.joml.Vector2d;
 
 import java.io.IOException;
+import java.util.UUID;
 
 @Getter
 public class VisualVector {
@@ -38,6 +39,25 @@ public class VisualVector {
         this.vectorType = vectorType;
         this.color = color;
 
+        initializeArrow();
+        initializeHovering();
+    }
+
+    public VisualVector(VectorType vectorType, Color color) throws IOException {
+        this.uuid = UUID.randomUUID().toString();
+        this.vector = new Vector2d();
+        this.vectorType = vectorType;
+        this.color = color;
+
+        initializeArrow();
+        initializeHovering();
+    }
+
+    /**
+     * Initializes ArrowController and caches arrow nodes for the VisualVector
+     * @throws IOException
+     */
+    public void initializeArrow() throws IOException {
         this.arrowLoader = App.getFXMLLoader("arrow");
         arrowLoader.load();
         this.arrowController = arrowLoader.getController();
@@ -49,18 +69,15 @@ public class VisualVector {
 
         // Arrow root mouse events only trigger for arrow line and head
         arrowRoot.setPickOnBounds(false);
-
-        initializeHovering();
     }
 
     /**
-     * Updates stored vector physics coordinates (used by net force & net acceleration on re-render).
-     * @param newVector The new vector physics coordinates
+     * Initializes the hovering system for the vector
      */
-    public void setVector(Vector2d newVector) {
-        if (newVector != null) {
-            this.vector.set(newVector);
-        }
+    public void initializeHovering() {
+        arrowRoot.setOnMouseEntered(this::handleOnMouseEnter);
+        arrowRoot.setOnMouseExited(this::handleOnMouseExit);
+        arrowRoot.setOnMouseMoved(this::updateInfoPosition);
     }
 
     /**
@@ -76,15 +93,6 @@ public class VisualVector {
         arrowController.setPoints(originX, endX, originY, endY);
         arrowController.setColor(color);
         return arrowRoot;
-    }
-
-    /**
-     * Initializes the hovering system for the vector
-     */
-    public void initializeHovering() {
-        arrowRoot.setOnMouseEntered(this::handleOnMouseEnter);
-        arrowRoot.setOnMouseExited(this::handleOnMouseExit);
-        arrowRoot.setOnMouseMoved(this::updateInfoPosition);
     }
 
     /**
@@ -155,6 +163,16 @@ public class VisualVector {
         infoBox.setLayoutY(mousePosY - boundsY + 35);
     }
 
+    /**
+     * Updates stored vector physics coordinates (used by net force & net acceleration on re-render).
+     * @param newVector The new vector physics coordinates
+     */
+    public void setVector(Vector2d newVector) {
+        if (newVector != null) {
+            this.vector.set(newVector);
+        }
+    }
+    
     /**
      * Returns a separate copy of the stored vector in visual vector to prevent mutations
      * @return The copy of the stored vector
